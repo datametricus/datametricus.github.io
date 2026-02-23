@@ -1,0 +1,9 @@
+---
+title: "DataMetricus"
+---
+
+Welcome to **DataMetricus**.
+
+Use the navigation bar to:
+- leave public comments
+- send an info request

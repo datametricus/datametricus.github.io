@@ -1,0 +1,33 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "DataMetricus"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: comments.qmd
+        text: Comments
+      - href: contact.qmd
+        text: Info requests
+
+  comments:
+    giscus:
+      repo: Fgazzelloni/datametricus
+      repo-id: "R_kgDORRG11w"
+      category: "General"
+      category-id: "DIC_kwDORRG1184C3C9U"
+      mapping: "pathname"
+      strict: false
+      reactions-enabled: true
+      emit-metadata: false
+      input-position: "bottom"
+      theme: "preferred_color_scheme"
+      lang: "en"
+
+format:
+  html:
+    theme: cosmo
+    toc: true
