@@ -1,8 +1,8 @@
-# DataMetricus
-
 <p align="right">
-  <img src="assets/logo.png" width="160">
-</p>
+  <img src="assets/logo.png" width="120">
+</p> 
+
+# DataMetricus
 
 Data-driven strategy data visualization and quantitative modelling.
 
