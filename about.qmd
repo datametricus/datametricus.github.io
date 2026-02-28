@@ -1,0 +1,93 @@
+---
+title: ""
+format:
+  html:
+    include-before-body: _nav.html
+    include-after-body: _footer.html
+---
+
+```{=html}
+<!-- PAGE HEADER -->
+<section class="dm-page-header">
+  <div class="dm-container">
+    <h1>About</h1>
+    <p>Independent quantitative advisory. Not a technology vendor. Not a generalist consultancy.</p>
+  </div>
+</section>
+
+<!-- IDENTITY STATEMENT -->
+<section class="dm-section dm-section--white">
+  <div class="dm-container">
+    <div class="dm-two-col">
+      <div>
+        <div class="dm-section-header">
+          <h2>What DataMetricus is</h2>
+        </div>
+        <p>DataMetricus is an independent statistical advisory specialising in tailored modelling, validation standards, and reproducible analytical systems, alongside quantitative capability development for teams operating in regulated environments.</p>
+        <p>Advisory engagements are modelling-led and incorporate the disciplined integration of machine learning and AI within clearly specified analytical frameworks. Training programmes are structured and technically rigorous, designed to build internal expertise, reproducible workflows, and analytical governance standards.</p>
+        <p>Work spans actuarial methods, applied data metrics, spatial and epidemiological modelling, and visualization. Outputs are transparent, version-controlled, and structured for independent verification.</p>
+      </div>
+      <div>
+        <div class="dm-section-header">
+          <h2>What DataMetricus is not</h2>
+        </div>
+        <p>DataMetricus is not a software vendor or generalist data consultancy.
+It does not build enterprise platforms or provide opinion-led advisory detached from formal modelling.</p>
+        <p>The practice does not operate in transaction advisory, corporate finance, or capital markets strategy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BIO -->
+<section class="dm-section">
+  <div class="dm-container">
+    <div style="max-width:680px;">
+      <div class="dm-section-header">
+        <h2>Principal</h2>
+      </div>
+      <p>DataMetricus was founded by a statistician and actuary with over two decades of experience conducting independent statistical and actuarial research within regulated and policy-facing environments.</p>
+      <p>Professional work spans insurance, national health institutions, and policy-driven organisations across the USA, the UK, and Europe, encompassing model development and review, applied statistical analysis, and methodological research.</p>
+      <p>The practice delivers well-documented, methodologically explicit analytical work designed to integrate seamlessly into larger advisory or assurance programmes, providing independent modelling expertise aligned with institutional and regulatory standards.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- WORKING PRINCIPLES -->
+<section class="dm-section dm-section--white">
+  <div class="dm-container">
+    <div class="dm-section-header">
+      <h2>Working principles</h2>
+      <p>Stated as operational commitments, not aspirational slogans.</p>
+    </div>
+    <div class="dm-principles">
+      <div class="dm-principle">
+        <h3>Reproducibility is a requirement, not a preference</h3>
+        <p>Every analysis we deliver can be re-run from documented inputs. No manual steps are permitted without documentation. This is non-negotiable across all engagement types.</p>
+      </div>
+      <div class="dm-principle">
+        <h3>Uncertainty is reported, not suppressed</h3>
+        <p>Primary estimates are always accompanied by a characterisation of uncertainty. Sensitivity analyses are conducted as a matter of method, not only when results are uncomfortable.</p>
+      </div>
+      <div class="dm-principle">
+        <h3>Independence is maintained throughout</h3>
+        <p>Analytical findings are determined by the data and the methodology. Client relationships do not alter the direction of reported results.</p>
+      </div>
+      <div class="dm-principle">
+        <h3>Scope is kept within competence</h3>
+        <p>We decline engagements that fall outside our documented area of expertise. Referrals to appropriate specialists are offered when we are not the right fit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <div class="dm-container">
+  
+    <div class="dm-mt-48">
+      <a href="contact.html" class="dm-btn dm-btn--primary">Contact us</a>
+    </div>
+    
+  </div>
+</section>
+```

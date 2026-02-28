@@ -1,5 +1,0 @@
----
-title: "Comments"
----
-
-Leave your comments below. (Requires a GitHub account.)

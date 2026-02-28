@@ -1,9 +1,155 @@
 ---
-title: "DataMetricus"
+title: ""
+description: "Independent quantitative advisory in health metrics, actuarial modelling, and reproducible research."
+format:
+  html:
+    include-before-body: _nav.html
+    include-after-body: _footer.html
 ---
 
-Welcome to **DataMetricus**.
+```{=html}
+<!-- HERO -->
+<section class="dm-hero">
+  <div class="dm-hero__inner">
+    <p class="dm-hero__eyebrow">Quantitative Advisory</p>
+    <h1 class="dm-hero__headline">Rigorous analysis for consequential decisions.</h1>
+    <p class="dm-hero__subheadline">DataMetricus provides independent statistical and actuarial modelling, applied health metrics, and reproducible research workflows for institutions where analytical quality is non-negotiable.</p>
+    <div class="dm-hero__actions">
+      <a href="services.html" class="dm-btn dm-btn--primary">Explore services</a>
+      <a href="contact.html" class="dm-btn dm-btn--outline">Start a project</a>
+    </div>
+  </div>
+</section>
 
-Use the navigation bar to:
-- leave public comments
-- send an info request
+<!-- FOCUS AREAS -->
+<section class="dm-section dm-section--white">
+  <div class="dm-container">
+    <div class="dm-section-header">
+      <h2>Four areas of focus</h2>
+      <p>Each engagement is scoped, documented, and delivered to institutional standards.</p>
+    </div>
+    <div class="dm-focus-grid">
+
+      <div class="dm-focus-card">
+        <svg class="dm-focus-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/>
+        </svg>
+        <h3>Actuarial Modelling</h3>
+        <p>Structured mortality, morbidity, and reserving models built for audit. Outputs documented to regulatory and internal governance standards.</p>
+      </div>
+
+      <div class="dm-focus-card">
+        <svg class="dm-focus-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/>
+        </svg>
+        <h3>Health Metrics</h3>
+        <p>Epidemiological and population health analyses using validated frameworks. Results traceable from source data through to reported estimates.</p>
+      </div>
+
+      <div class="dm-focus-card">
+        <svg class="dm-focus-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/>
+        </svg>
+        <h3>Reproducible Research</h3>
+        <p>End-to-end analytical pipelines in R, Python, and Quarto. Version-controlled, tested, and structured so any qualified analyst can audit the chain of reasoning.</p>
+      </div>
+
+      <div class="dm-focus-card">
+        <svg class="dm-focus-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/>
+        </svg>
+        <h3>Quantitative Training</h3>
+        <p>Structured programmes for analysts and research teams. Foundations through to applied modelling and reproducible workflow practice.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- APPROACH -->
+<section class="dm-section">
+  <div class="dm-container">
+    <div class="dm-two-col">
+      <div>
+        <div class="dm-section-header">
+          <h2>How we work</h2>
+        </div>
+        <div class="dm-approach">
+          <p>Every deliverable is structured so that results can be independently verified. Code is version-controlled and documented. Assumptions are stated explicitly and tested against alternatives. Data provenance is recorded at every transformation step.</p>
+          <p>We do not produce black-box outputs. Clients receive not only findings but the documented analytical chain that produced them — enabling internal review, regulatory examination, or downstream use by their own teams.</p>
+        </div>
+        <p class="dm-micro-proof">All outputs carry a documented audit trail from raw input to final result.</p>
+      </div>
+      <div>
+        <div class="dm-section-header">
+          <h2>Working principles</h2>
+        </div>
+        <div class="dm-principles">
+          <div class="dm-principle">
+            <h3>Reproducibility by default</h3>
+            <p>No manual steps without documentation. Pipelines are scripted, not assembled by hand.</p>
+          </div>
+          <div class="dm-principle">
+            <h3>Explicit assumptions</h3>
+            <p>Sensitivity analyses accompany every primary estimate. Uncertainty is quantified, not suppressed.</p>
+          </div>
+          <div class="dm-principle">
+            <h3>Independence preserved</h3>
+            <p>Analytical conclusions are not adjusted for client preference. Findings are reported as the data supports.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXAMPLE ENGAGEMENTS -->
+<section class="dm-section dm-section--white">
+  <div class="dm-container">
+    <div class="dm-section-header">
+      <h2>Example engagements</h2>
+      <p>Selected outcomes from completed projects. Client details withheld by agreement.</p>
+    </div>
+    <div class="dm-engagement-grid">
+
+      <div class="dm-engagement-card">
+        <div class="dm-engagement-card__tag">Life & Health Insurance</div>
+        <h3>Mortality assumption review</h3>
+        <p>Reviewed and updated best-estimate mortality assumptions for a life insurer's annuity book. Delivered a fully documented R pipeline, enabling the client's actuarial team to re-run and audit the analysis independently.</p>
+      </div>
+
+      <div class="dm-engagement-card">
+        <div class="dm-engagement-card__tag">Public Health</div>
+        <h3>Disease burden estimation</h3>
+        <p>Constructed reproducible DALY estimates for a regional health authority using linked administrative datasets. Methodology report prepared to academic publication standard with full sensitivity analysis.</p>
+      </div>
+
+      <div class="dm-engagement-card">
+        <div class="dm-engagement-card__tag">Regulatory Body</div>
+        <h3>Statistical governance review</h3>
+        <p>Assessed reproducibility and traceability of statistical outputs produced by an internal analytics team. Delivered a structured recommendations report with annotated code examples.</p>
+      </div>
+
+      <div class="dm-engagement-card">
+        <div class="dm-engagement-card__tag">Research Institution</div>
+        <h3>Workflow migration to Quarto</h3>
+        <p>Migrated a multi-analyst epidemiological study from disconnected scripts to a Quarto-based reproducible pipeline with Git versioning, shared data contracts, and automated output checks.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TRAINING TEASER -->
+<section class="dm-section">
+  <div class="dm-container">
+    <div class="dm-training-teaser">
+      <div>
+        <h2>Quantitative training programmes</h2>
+        <p>Structured learning for analysts who need to work at higher levels of rigour. Three tracks: Foundations, Applied Modelling, and Reproducible Workflows.</p>
+      </div>
+      <a href="training.html" class="dm-btn dm-btn--outline" style="flex-shrink:0;">View programmes</a>
+    </div>
+  </div>
+</section>
+```

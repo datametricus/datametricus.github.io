@@ -1,0 +1,161 @@
+---
+title: ""
+format:
+  html:
+    include-before-body: _nav.html
+    include-after-body: _footer.html
+---
+
+```{=html}
+<!-- PAGE HEADER -->
+<section class="dm-page-header">
+  <div class="dm-container">
+    <h1>Training</h1>
+    <p>Structured programmes for analysts who need to work at higher levels of rigour, reproducibility, and methodological transparency.</p>
+  </div>
+</section>
+
+<!-- PROGRAMMES -->
+<section class="dm-section dm-section--white">
+  <div class="dm-container">
+    <div class="dm-section-header">
+      <h2>Three programme tracks</h2>
+      <p>Each track is self-contained and can be taken independently or in sequence.</p>
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:24px;">
+
+      <div class="dm-track">
+        <div class="dm-track__label">Track 1</div>
+        <h3>Foundations of Quantitative Analysis</h3>
+        <div class="dm-track__meta">
+          <span class="dm-track__meta-item"><strong>Audience:</strong> Early-career analysts and researchers</span>
+          <span class="dm-track__meta-item"><strong>Format:</strong> 2-day intensive</span>
+          <span class="dm-track__meta-item"><strong>Duration:</strong> 8 hours contact time</span>
+          <span class="dm-track__meta-item"><strong>Language:</strong>Italian/English</span>
+        </div>
+        <p>Core statistical concepts applied to real data, with emphasis on understanding what methods require and what they cannot determine. No prior programming experience assumed.</p>
+        <ul class="dm-track__topics">
+         <li>Introduction to R/Python and reproducible scripts</li>
+         <li>Probability, uncertainty, and interval estimation</li>
+          <li>Hypothesis testing: what it does and does not establish</li>
+          <li>Regression foundations and assumption checking</li>
+          <li>Communicating quantitative findings to non-specialist audiences</li>
+
+        </ul>
+      </div>
+
+      <div class="dm-track">
+        <div class="dm-track__label">Track 2</div>
+        <h3>Applied Modelling</h3>
+        <div class="dm-track__meta">
+          <span class="dm-track__meta-item"><strong>Audience:</strong> Analysts with statistical foundations</span>
+          <span class="dm-track__meta-item"><strong>Format:</strong> 3-day workshop or 6 half-days</span>
+          <span class="dm-track__meta-item"><strong>Duration:</strong> 12 hours contact time</span>
+          <span class="dm-track__meta-item"><strong>Language: </strong> Italian/English</span>
+          <span class="dm-track__meta-item"><strong>Tool: </strong> R/Python</span>
+        </div>
+        <p>Practical model construction in health, insurance, or policy contexts. Covers model selection, validation, and the documentation required for internal governance or external review.</p>
+        <ul class="dm-track__topics">
+          <li>Generalised linear models and extensions</li>
+          <li>Survival analysis and time-to-event data</li>
+          <li>Mortality and morbidity modelling fundamentals</li>
+          <li>Model validation and out-of-sample testing</li>
+          <li>Structuring technical assumptions papers</li>
+        </ul>
+      </div>
+
+      <div class="dm-track">
+        <div class="dm-track__label">Track 3</div>
+        <h3>Reproducible Workflows</h3>
+        <div class="dm-track__meta">
+          <span class="dm-track__meta-item"><strong>Audience:</strong> Analysts and research teams</span>
+          <span class="dm-track__meta-item"><strong>Format:</strong> 2-day workshop or in-house</span>
+          <span class="dm-track__meta-item"><strong>Duration:</strong> 12 hours contact time</span>
+        </div>
+        <p>Practical implementation of reproducible, version-controlled analytical pipelines using R, Python, Quarto, and Git. Designed for teams producing outputs that must withstand audit or peer review.</p>
+        <ul class="dm-track__topics">
+          <li>Version control with Git: workflow and practice</li>
+          <li>Quarto for reproducible reports and documents</li>
+          <li>Pipeline structure: data contracts, transformation, output</li>
+          <li>Automated output checking and validation routines</li>
+          <li>Team workflows: branching, review, and release</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERY FORMATS -->
+<section class="dm-section">
+  <div class="dm-container">
+    <div class="dm-section-header">
+      <h2>Delivery formats</h2>
+    </div>
+    <div class="dm-delivery-grid">
+      <div class="dm-delivery-card">
+        <h3>Open workshop</h3>
+        <p>Scheduled cohort sessions open to participants from multiple organisations. Announced via this site and direct contact list.</p>
+      </div>
+      <div class="dm-delivery-card">
+        <h3>In-house course</h3>
+        <p>Delivered to a single organisation's team, with syllabus adjusted to the institutional context and data environment.</p>
+      </div>
+      <div class="dm-delivery-card">
+        <h3>Individual coaching</h3>
+        <p>One-to-one sessions for analysts or researchers with specific methodological questions or ongoing project support needs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO ATTENDS -->
+<section class="dm-section dm-section--white">
+  <div class="dm-container">
+    <div class="dm-two-col">
+      <div>
+        <div class="dm-section-header">
+          <h2>Who attends</h2>
+        </div>
+        <p>Participants are typically working analysts and researchers in insurance, reinsurance, public health, or regulated bodies who require stronger foundations in statistical practice, more rigorous modelling skills, or the ability to produce reproducible outputs that withstand external scrutiny.</p>
+        <p>A substantial proportion come from organisations that have identified a gap between the analytical quality they need to produce and the tools and methods currently in use. Others attend to standardise practice across a team or to support a specific project with an elevated evidence requirement.</p>
+        <p>No prior programming experience is assumed for Track 1. Tracks 2 and 3 assume working familiarity with at least one analytical environment (R, Python, or Stata).</p>
+      </div>
+      <div>
+        <div class="dm-section-header">
+          <h2>Sample syllabus excerpt</h2>
+        </div>
+        <details class="dm-syllabus">
+          <summary class="dm-syllabus__toggle">Track 3 — Reproducible Workflows: Day 1</summary>
+          <div class="dm-syllabus__body">
+            <ol>
+              <li>Why reproducibility matters: governance, audit, and handover scenarios</li>
+              <li>The anatomy of a reproducible pipeline: inputs, transformations, outputs</li>
+              <li>Git fundamentals: commits, branches, and the mental model of version control</li>
+              <li>Practical session: initialising a project with Git and directory structure conventions</li>
+              <li>Data contracts: documenting what your code expects of its inputs</li>
+              <li>Quarto introduction: from script to documented report</li>
+              <li>Practical session: converting an existing analysis script to a Quarto document</li>
+              <li>Review and Q&A</li>
+            </ol>
+          </div>
+        </details>
+        <p class="dm-mt-24" style="font-size:0.9375rem; color:var(--dm-muted);">Full syllabi provided upon enquiry. In-house courses include a pre-delivery scoping call to align content with the team's working environment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="dm-section">
+  <div class="dm-container">
+    <div style="max-width:560px;">
+      <h2 class="dm-mb-16">Enquire about a programme</h2>
+      <p>To discuss scheduling, in-house delivery, or a coaching arrangement, contact us with a brief description of your team's context and the specific gap you are addressing.</p>
+      <div class="dm-mt-32">
+        <a href="contact.html" class="dm-btn dm-btn--primary">Contact us</a>
+      </div>
+    </div>
+  </div>
+</section>
+```

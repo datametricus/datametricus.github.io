@@ -1,0 +1,177 @@
+---
+title: ""
+format:
+  html:
+    include-before-body: _nav.html
+    include-after-body: _footer.html
+---
+
+```{=html}
+<!-- PAGE HEADER -->
+<section class="dm-page-header">
+  <div class="dm-container">
+    <h1>Services</h1>
+    <p>Analytical engagements scoped to your institutional context, delivered with documented methodology and full auditability.</p>
+  </div>
+</section>
+
+<!-- CORE SERVICES -->
+<section class="dm-section dm-section--white">
+  <div class="dm-container">
+
+    <div class="dm-service">
+      <div class="dm-service__header">
+        <span class="dm-service__name">Actuarial and Statistical Modelling</span>
+        <span class="dm-service__format">Project · Retainer</span>
+      </div>
+      <p>Development and validation of mortality, morbidity, and reserving models to regulatory and internal governance standards. All models are scripted, version-controlled, and accompanied by technical documentation sufficient for independent review.</p>
+      <p>Typically engaged for basis risk assessments, assumption setting, model validation, or actuarial support where independence from the primary team is required.</p>
+      <ul class="dm-service__deliverables">
+        <li>Model code (R or Python) with documented logic and test suite</li>
+        <li>Technical assumptions paper with alternatives tested</li>
+        <li>Executive summary structured for non-specialist governance audiences</li>
+        <li>Reproducible pipeline enabling client-side re-run and audit</li>
+      </ul>
+      <p class="dm-micro-proof">All model outputs carry a version-stamped audit trail from data ingestion to final estimates.</p>
+    </div>
+
+    <div class="dm-service">
+      <div class="dm-service__header">
+        <span class="dm-service__name">Applied Epidemiology and Health Metrics</span>
+        <span class="dm-service__format">Project · Retainer</span>
+      </div>
+      <p>Quantitative analyses of population health data using validated epidemiological frameworks. Outputs are structured for use in policy submissions, regulatory filings, or peer-reviewed publication.</p>
+      <p>Work includes burden of disease estimation, survival analysis, health economic modelling, and evidence synthesis from administrative or survey data.</p>
+      <ul class="dm-service__deliverables">
+        <li>Analysis code and data processing pipeline</li>
+        <li>Methodology report to publication or submission standard</li>
+        <li>Sensitivity and uncertainty analysis</li>
+        <li>Structured results tables with confidence intervals</li>
+      </ul>
+      <p class="dm-micro-proof">Every estimate is traceable to its source dataset and methodological reference.</p>
+    </div>
+
+    <div class="dm-service">
+      <div class="dm-service__header">
+        <span class="dm-service__name">Reproducible Research Infrastructure</span>
+        <span class="dm-service__format">Project · Workshop</span>
+      </div>
+      <p>Design and implementation of reproducible analytical pipelines for teams producing regulatory, policy, or research outputs. Includes audit of existing workflows against reproducibility standards and structured migration plans.</p>
+      <p>Outputs enable any qualified analyst to re-run, verify, and extend the work without reliance on the original author's undocumented knowledge.</p>
+      <ul class="dm-service__deliverables">
+        <li>Pipeline design in R, Python, or Quarto with Git versioning</li>
+        <li>Data contracts and transformation documentation</li>
+        <li>Automated output checks and validation routines</li>
+        <li>Team handover session and written operational guide</li>
+      </ul>
+      <p class="dm-micro-proof">Infrastructure is designed so internal teams can maintain and audit it without ongoing external dependency.</p>
+    </div>
+
+    <div class="dm-service">
+      <div class="dm-service__header">
+        <span class="dm-service__name">Statistical Governance and Methods Review</span>
+        <span class="dm-service__format">Project</span>
+      </div>
+      <p>Independent review of statistical outputs, methods, and analytical processes for internal governance, regulatory response, or quality assurance purposes. Findings are documented to a standard suitable for committee-level reporting.</p>
+      <ul class="dm-service__deliverables">
+        <li>Structured review report with findings graded by severity</li>
+        <li>Recommendations with annotated examples where applicable</li>
+        <li>Optional follow-up session with the analytical team</li>
+      </ul>
+      <p class="dm-micro-proof">Reviews are conducted independently of the team whose work is under examination.</p>
+    </div>
+
+    <div class="dm-service">
+      <div class="dm-service__header">
+        <span class="dm-service__name">Quantitative Training</span>
+        <span class="dm-service__format">Workshop · In-house</span>
+      </div>
+      <p>Structured training programmes for analysts and research teams, covering statistical foundations, applied modelling, and reproducible workflow practice. Delivered as open workshops, in-house courses, or individual coaching. See the <a href="training.html">training page</a> for full programme details.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- WHAT WE NEED FROM YOU -->
+<section class="dm-section">
+  <div class="dm-container">
+    <div class="dm-two-col">
+      <div>
+        <div class="dm-section-header">
+          <h2>What we need from you</h2>
+          <p>Scoping a project accurately requires clear information upfront. The following reduces time to proposal and improves the precision of the engagement specification.</p>
+        </div>
+        <ul class="dm-guidance-list">
+          <li><strong>Data access:</strong> Format, volume, access method, and any governance constraints on the data to be analysed.</li>
+          <li><strong>Analytical objective:</strong> The specific question to be answered, the decision it informs, and the audience for the output.</li>
+          <li><strong>Timeline:</strong> Deadlines that are fixed (regulatory, publication, board) versus those that are flexible.</li>
+          <li><strong>Constraints:</strong> Software environment, output format requirements, confidentiality restrictions.</li>
+          <li><strong>Decision-maker:</strong> Who will use the output, and what level of technical fluency they have.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="dm-section-header">
+          <h2>Engagement models</h2>
+        </div>
+        <div class="dm-models-grid">
+          <div class="dm-model-card">
+            <h3>Fixed-scope project</h3>
+            <p>Defined deliverables, timeline, and fee. Appropriate for discrete analyses with clear inputs and outputs.</p>
+          </div>
+          <div class="dm-model-card">
+            <h3>Retainer</h3>
+            <p>Ongoing analytical support on a monthly basis. Appropriate for teams requiring regular independent review or modelling capacity.</p>
+          </div>
+          <div class="dm-model-card">
+            <h3>Training block</h3>
+            <p>Fixed-duration programme with agreed syllabus. Priced per session or per participant cohort.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="dm-section dm-section--white">
+  <div class="dm-container">
+    <div class="dm-section-header" style="max-width:640px;">
+      <h2>Frequently asked questions</h2>
+    </div>
+
+    <div style="max-width:680px;">
+
+      <div class="dm-faq">
+        <p class="dm-faq__q">Do you work with proprietary or sensitive data?</p>
+        <p class="dm-faq__a">Yes. Data handling arrangements, including transfer mechanisms and confidentiality obligations, are specified in the engagement agreement before any data is shared. We do not retain client data beyond the agreed project period.</p>
+      </div>
+
+      <div class="dm-faq">
+        <p class="dm-faq__q">Can outputs be used in regulatory submissions?</p>
+        <p class="dm-faq__a">Analytical outputs are structured and documented to a standard appropriate for regulatory review. Responsibility for submission rests with the client; we provide the documented methodology and code necessary to support examination.</p>
+      </div>
+
+      <div class="dm-faq">
+        <p class="dm-faq__q">What software tools do you use?</p>
+        <p class="dm-faq__a">Primary tools are R, Python, Quarto, and Git. Outputs can be formatted for Excel or other platforms where required. We do not use proprietary analytical platforms that limit client access to the underlying code.</p>
+      </div>
+
+      <div class="dm-faq">
+        <p class="dm-faq__q">How do you handle disagreements about findings?</p>
+        <p class="dm-faq__a">Analytical conclusions are determined by the data and the stated methodology. Where a client disagrees with a finding, we will examine whether the concern reflects a methodological question that warrants investigation. We do not revise conclusions to reflect client preference.</p>
+      </div>
+
+      <div class="dm-faq">
+        <p class="dm-faq__q">What is the typical turnaround for a scoping proposal?</p>
+        <p class="dm-faq__a">A scoping call followed by a written proposal typically takes five to seven working days, provided the information listed above is available at first contact.</p>
+      </div>
+
+    </div>
+
+    <div class="dm-mt-48">
+      <a href="contact.html" class="dm-btn dm-btn--primary">Start a project</a>
+    </div>
+
+  </div>
+</section>
+```

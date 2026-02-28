@@ -1,17 +1,121 @@
 ---
-title: "Info requests"
+title: ""
+format:
+  html:
+    include-before-body: _nav.html
+    include-after-body: _footer.html
 ---
 
-For private info requests, use the form below.
+```{=html}
+<!-- PAGE HEADER -->
+<section class="dm-page-header">
+  <div class="dm-container">
+    <h1>Contact</h1>
+    <p>For project enquiries, training requests, and scoping conversations. We respond to all substantive messages within two working days.</p>
+  </div>
+</section>
 
-<form action="https://formspree.io/f/{your-form-id}" method="POST">
-  <label for="name">Name:</label><br>
-  <input type="text" id="name" name="name" required><br>
-  <label for="email">Email:</label><br>
-  <input type="email" id="email" name="email" required><br>
-  <label for="message">Message:</label><br>
-  <textarea id="message" name="message" rows="5" required></textarea><br>
-  <button type="submit">Send</button>
-</form>
+<!-- CONTACT CONTENT -->
+<section class="dm-section dm-section--white">
+  <div class="dm-container">
+    <div class="dm-two-col">
 
-> Replace `{your-form-id}` with your actual Formspree form ID after signup.
+      <!-- LEFT: Meta + guidance -->
+      <div>
+        <div class="dm-section-header">
+          <h2>How to reach us</h2>
+        </div>
+        
+
+        <div class="dm-section-header dm-mt-40">
+          <h2>Enquiries and scope</h2>
+          <p>Analytical engagements vary significantly in complexity and governance requirements. An initial message outlining the decision context, available data, timing considerations, and institutional constraints will allow for a focused and efficient discussion. If you’re considering a collaboration, a short note outlining the context is usually enough to begin. The following points help clarify scope and feasibility:</p>
+        </div>
+
+        <ol class="dm-guidance-list">
+          <li><strong>Objective:</strong> The specific analytical question you need answered, and the decision or output it informs.</li>
+          <li><strong>Data available:</strong> What data you have access to, its format, volume, and any governance constraints on its use.</li>
+          <li><strong>Deadline:</strong> Any fixed deadlines (regulatory, publication, board) and whether the timeline has flexibility.</li>
+          <li><strong>Constraints:</strong> Software environment, output format requirements, confidentiality restrictions, or internal standards that must be met.</li>
+          <li><strong>Decision-maker involved:</strong> Who will use the output, and at what level of technical fluency.</li>
+        </ol>
+
+        <div class="dm-availability">
+          <strong>Current availability:</strong> Accepting new projects for Q1 2026 onwards. Training enquiries accepted for any date. Please indicate your preferred start period in your message.
+        </div>
+      </div>
+
+      <!-- RIGHT: Form -->
+      <div>
+        <div class="dm-section-header">
+          <h2>Send a message</h2>
+        </div>
+        
+        <!-- Formspree Form -->
+        <form class="dm-form" id="contact-form" action="https://formspree.io/f/mnjbrepp" method="POST">
+          <div class="dm-form__group">
+            <label class="dm-form__label" for="name">Name</label>
+            <input class="dm-form__input" type="text" id="name" name="name" autocomplete="name" placeholder="Your full name">
+          </div>
+          <div class="dm-form__group">
+            <label class="dm-form__label" for="organisation">Organisation</label>
+            <input class="dm-form__input" type="text" id="organisation" name="organisation" autocomplete="organization" placeholder="Organisation or institution">
+          </div>
+          <div class="dm-form__group">
+            <label class="dm-form__label" for="email">Email address</label>
+            <input class="dm-form__input" type="email" id="email" name="email" autocomplete="email" placeholder="you@organisation.com">
+          </div>
+          <div class="dm-form__group">
+            <label class="dm-form__label" for="message">Message</label>
+            <textarea class="dm-form__textarea" id="message" name="message" placeholder="Briefly describe the project or enquiry, including the five points listed opposite where relevant."></textarea>
+          </div>
+          <button type="submit" class="dm-btn dm-btn--primary">Send message</button>
+          <p id="form-feedback" style="display:none; margin-top:12px; font-size:0.875rem; color:var(--dm-teal);"></p>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  var name    = document.getElementById('name').value.trim();
+  var email   = document.getElementById('email').value.trim();
+  var message = document.getElementById('message').value.trim();
+  var feedback = document.getElementById('form-feedback');
+  var btn = this.querySelector('button[type="submit"]');
+
+  if (!name || !email || !message) {
+    feedback.textContent = 'Please complete name, email, and message before submitting.';
+    feedback.style.color = 'var(--dm-muted)';
+    feedback.style.display = 'block';
+    return;
+  }
+
+  fetch(this.action, {
+    method: 'POST',
+    body: new FormData(this),
+    headers: { 'Accept': 'application/json' }
+  }).then(function(response) {
+    if (response.ok) {
+      feedback.textContent = 'Thank you. Your message has been received and will be answered within two working days.';
+      feedback.style.color = 'var(--dm-teal)';
+      feedback.style.display = 'block';
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+    } else {
+      feedback.textContent = 'Something went wrong. Please try again or email us directly.';
+      feedback.style.color = 'var(--dm-muted)';
+      feedback.style.display = 'block';
+    }
+  }).catch(function() {
+    feedback.textContent = 'Network error. Please check your connection and try again.';
+    feedback.style.color = 'var(--dm-muted)';
+    feedback.style.display = 'block';
+  });
+});
+</script>
+```
