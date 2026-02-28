@@ -862,7 +862,16 @@ details[open] summary.dm-syllabus__toggle::after {
   flex-wrap: wrap;
 }
 
+.dm-footer__logo {
+  height: 32px;
+  width: auto;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
 .dm-footer__brand {
+  display: flex;
+  align-items: center;
   font-size: 1rem;
   font-weight: 600;
   color: var(--dm-white);
