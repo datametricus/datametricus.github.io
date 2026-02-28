@@ -23,6 +23,7 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
+<link href="./assets/logo-transparent.png" rel="icon" type="image/png">
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-html/tabby.min.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -143,8 +144,11 @@ It does not build enterprise platforms or provide opinion-led advisory detached 
 <footer class="dm-footer">
   <div class="dm-footer__inner">
     <div>
-      <div class="dm-footer__brand">Data<span>Metricus</span></div>
-      <div class="dm-footer__tagline">Independent quantitative advisory</div>
+      <div class="dm-footer__brand">
+        <img src="assets/logo-transparent.png" alt="DataMetricus logo" class="dm-footer__logo">
+        Data<span>Metricus</span>
+      </div>
+      <div class="dm-footer__tagline">Independent quantitative and actuarial advisory</div>
     </div>
     <ul class="dm-footer__nav">
       <li><a href="index.html">Home</a></li>
@@ -235,7 +239,7 @@ It does not build enterprise platforms or provide opinion-led advisory detached 
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/datametricus\.github\.io");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

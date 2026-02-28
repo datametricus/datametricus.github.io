@@ -4,9 +4,12 @@ project:
 
 website:
   title: "DataMetricus"
+  favicon: "assets/logo-transparent.png"
   site-url: "https://datametricus.github.io"
   description: "Independent quantitative advisory in health metrics, actuarial modelling, and reproducible research."
   navbar:
+    logo: "assets/logo-transparent.png"
+    logo-alt: "DataMetricus logo"
     left:
       - href: index.qmd
         text: Home
