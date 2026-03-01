@@ -9,6 +9,8 @@ website:
   favicon: "assets/logo-transparent.png"
   site-url: "https://datametricus.github.io"
   description: "Independent quantitative advisory in health metrics, actuarial modelling, and reproducible research."
+  google-analytics:
+    tracking-id: "G-XGF1P33KPV"
   navbar:
     logo: "assets/logo-transparent.png"
     logo-alt: "DataMetricus logo"
