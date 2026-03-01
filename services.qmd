@@ -33,7 +33,9 @@ format:
         <li>Reproducible pipeline enabling client-side re-run and audit</li>
       </ul>
       <p class="dm-micro-proof">All model outputs carry a version-stamped audit trail from data ingestion to final estimates.</p>
+      <p style="margin-top:12px; font-size:0.875rem;">Independent validation of existing models is available as a separate engagement. <a href="services/model-validation.html">Read about our model validation service →</a></p>
     </div>
+    
 
     <div class="dm-service">
       <div class="dm-service__header">

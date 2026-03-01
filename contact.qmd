@@ -41,7 +41,7 @@ format:
         </ol>
 
         <div class="dm-availability">
-          <strong>Current availability:</strong> Accepting new projects for Q1 2026 onwards. Training enquiries accepted for any date. Please indicate your preferred start period in your message.
+          <strong>Current availability:</strong> Accepting new projects for Q2 - Q3 2026 onwards. Training enquiries accepted for any date. Please indicate your preferred start period in your message.
         </div>
       </div>
 

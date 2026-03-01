@@ -1,0 +1,266 @@
+---
+title: ""
+description: ""
+format:
+  html:
+    include-before-body: ../_nav.html
+    include-after-body: ../_footer.html
+---
+
+```{=html}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Independent Model Validation",
+  "provider": {
+    "@type": "ProfessionalService",
+    "name": "DataMetricus",
+    "url": "https://datametricus.github.io",
+    "email": "docksbox@pm.me"
+  },
+  "serviceType": "Statistical and Actuarial Model Validation",
+  "description": "Independent review of statistical and actuarial models for regulated and oversight-driven environments. Validation engagements cover model design, assumptions, implementation logic, and documentation sufficiency for audit or regulatory examination.",
+  "areaServed": "GB",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Validation Engagement Formats",
+    "itemListElement": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Project-based model validation" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Targeted methodological review" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Retainer for ongoing model oversight" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Advisory programme collaboration" } }
+    ]
+  }
+}
+</script>
+
+<!-- ── HERO ── -->
+<section class="dm-page-header">
+  <div class="dm-container">
+    <p class="dm-hero__eyebrow" style="color:var(--dm-teal); font-size:0.8125rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:16px;">Analytical Services</p>
+    <h1>Independent Model Validation</h1>
+    <p>Independent review of statistical and actuarial models for regulated and oversight-driven environments.</p>
+    <div style="margin-top:32px;">
+      <a href="/contact.html" class="dm-btn dm-btn--primary">Request a scope discussion</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTEXT STATEMENT ── -->
+<section class="dm-section dm-section--white">
+  <div class="dm-container">
+    <div style="max-width:720px;">
+      <p style="font-size:1.125rem; line-height:1.75; color:var(--dm-text);">Model outputs influence governance decisions, regulatory reporting, and institutional accountability. Where modelling is consequential, the assumptions, implementation logic, and performance claims embedded in that work must withstand independent scrutiny — not only at initial development, but at the point of use.</p>
+      <p style="font-size:1.125rem; line-height:1.75; color:var(--dm-text);">Independent validation provides a structured, documented assessment conducted by a party with no involvement in the original development. It is distinct from internal peer review, which, however technically sound, does not satisfy the independence requirements of most regulatory frameworks or institutional governance standards.</p>
+      <p style="font-size:1.125rem; line-height:1.75; color:var(--dm-text);">DataMetricus conducts model validation engagements across statistical, actuarial, and epidemiological modelling contexts. All validation work is performed independently of the primary development team, with findings documented to a standard suitable for governance committee review, regulatory examination, or external audit.</p>
+      <p class="dm-micro-proof">Validation findings are documented independently of the team whose work is under review.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── SCOPE OF REVIEW ── -->
+<section class="dm-section">
+  <div class="dm-container">
+    <div class="dm-two-col">
+      <div>
+        <div class="dm-section-header">
+          <h2>Scope of review</h2>
+          <p>Validation scope is agreed at engagement outset and documented in a formal scope statement. The following areas may be included in full or in part, depending on the model type, regulatory context, and organisational requirements.</p>
+        </div>
+
+        <div class="dm-validation-scope">
+
+          <div class="dm-scope-item">
+            <h3>Model design and theoretical basis</h3>
+            <p>Assessment of whether the chosen modelling approach is appropriate for the stated purpose. This includes review of the underlying statistical or actuarial framework, the conditions under which the model's assumptions hold, and any material limitations that follow from the design choices made.</p>
+          </div>
+
+          <div class="dm-scope-item">
+            <h3>Assumptions and parameterisation</h3>
+            <p>Examination of key model assumptions, their justification relative to available evidence, and their sensitivity to alternative specifications. Where assumptions cannot be directly validated from data, the reasonableness of expert judgement applied is assessed and documented.</p>
+          </div>
+
+          <div class="dm-scope-item">
+            <h3>Independent result replication</h3>
+            <p>Re-implementation of the model or selected model components using independent code to verify that documented outputs are reproducible from stated inputs. Discrepancies between original and replicated outputs are investigated and classified by cause and materiality.</p>
+          </div>
+
+          <div class="dm-scope-item">
+            <h3>Data inputs and transformation logic</h3>
+            <p>Review of input data sources, transformation steps, and the treatment of missing values, outliers, and edge cases. Data lineage is assessed for traceability from raw source to model-ready form.</p>
+          </div>
+
+          <div class="dm-scope-item">
+            <h3>Out-of-sample testing and stress scenarios</h3>
+            <p>Evaluation of model performance under conditions not used in fitting or calibration. Stress scenarios are designed to assess whether the model produces credible outputs at distributional boundaries relevant to the model's governance context.</p>
+          </div>
+
+          <div class="dm-scope-item">
+            <h3>Documentation sufficiency</h3>
+            <p>Assessment of whether model documentation — technical specifications, assumption rationale, change logs, and user guidance — is sufficient to support independent re-use, regulatory examination, or informed governance oversight without reliance on the original development team.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <div>
+        <div class="dm-section-header">
+          <h2>Applicable model contexts</h2>
+          <p>Independent validation is relevant wherever modelling outputs carry accountability obligations. Contexts in which this practice is regularly required or recommended include:</p>
+        </div>
+
+        <div class="dm-context-list">
+          <div class="dm-context-item">
+            <div class="dm-context-item__label">Life and health insurance</div>
+            <p>Mortality and morbidity models, pricing bases, best-estimate liability calculations, and assumption-setting frameworks subject to actuarial standards and Solvency II or equivalent capital requirements.</p>
+          </div>
+          <div class="dm-context-item">
+            <div class="dm-context-item__label">Reserving and capital models</div>
+            <p>Internal models and standard formula adjustments used for regulatory capital assessment. Validation is a defined component of most regulatory approval processes for internal model use.</p>
+          </div>
+          <div class="dm-context-item">
+            <div class="dm-context-item__label">Public health forecasting</div>
+            <p>Epidemiological and surveillance models informing resource allocation, policy design, or public health intervention decisions. Independence is particularly relevant where model outputs are published or submitted to oversight bodies.</p>
+          </div>
+          <div class="dm-context-item">
+            <div class="dm-context-item__label">Policy-impact simulations</div>
+            <p>Quantitative models used to estimate the effect of regulatory or policy changes, where the credibility of the analysis is a material factor in the decision process.</p>
+          </div>
+          <div class="dm-context-item">
+            <div class="dm-context-item__label">Research models</div>
+            <p>Statistical models underpinning institutional research outputs, grant applications, or evidence submissions where peer-reviewed or governance-standard documentation is required.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DELIVERABLES ── -->
+<section class="dm-section dm-section--white">
+  <div class="dm-container">
+    <div class="dm-section-header" style="max-width:680px;">
+      <h2>Deliverables</h2>
+      <p>Each validation engagement produces structured documentation designed for use by technical teams, governance committees, and external reviewers. The specific set of deliverables is agreed at scoping stage.</p>
+    </div>
+
+    <div class="dm-deliverables-grid">
+
+      <div class="dm-deliverable-card">
+        <div class="dm-deliverable-card__number">01</div>
+        <h3>Technical validation report</h3>
+        <p>The primary output of the engagement. A structured document covering all in-scope validation activities, with findings classified by type and materiality. Written to a standard appropriate for regulatory submission or governance committee review. Includes an explicit statement of validation scope and the independence basis on which the review was conducted.</p>
+      </div>
+
+      <div class="dm-deliverable-card">
+        <div class="dm-deliverable-card__number">02</div>
+        <h3>Assumption review memorandum</h3>
+        <p>A dedicated document assessing each material model assumption: its stated basis, the evidence cited in its support, alternative assumptions considered, and a structured assessment of sensitivity. Where assumptions involve expert judgement, the reasonableness of that judgement is assessed relative to available evidence and peer practice.</p>
+      </div>
+
+      <div class="dm-deliverable-card">
+        <div class="dm-deliverable-card__number">03</div>
+        <h3>Independent replication summary</h3>
+        <p>Documentation of the independent re-implementation exercise, including the scope of replication, the tools and environment used, results of comparison against original outputs, and a classification of any discrepancies identified. Code produced during replication is provided to the client in version-controlled form.</p>
+      </div>
+
+      <div class="dm-deliverable-card">
+        <div class="dm-deliverable-card__number">04</div>
+        <h3>Limitations and risk assessment</h3>
+        <p>A structured inventory of model limitations identified during review, each assessed for materiality relative to the model's stated purpose and use context. Risk assessments are graded to support governance prioritisation. Recommendations for remediation or compensating controls are included where applicable.</p>
+      </div>
+
+      <div class="dm-deliverable-card">
+        <div class="dm-deliverable-card__number">05</div>
+        <h3>Executive summary</h3>
+        <p>A non-technical summary of validation findings, conclusions, and material risks, structured for oversight committees, boards, or senior leadership without a quantitative background. Written to provide an accurate characterisation of model reliability without requiring engagement with technical detail.</p>
+      </div>
+
+    </div>
+
+    <p class="dm-micro-proof" style="margin-top:40px;">All validation outputs are version-controlled, reproducible, and delivered in formats suitable for archive and subsequent examination.</p>
+  </div>
+</section>
+
+<!-- ── WHY INDEPENDENCE MATTERS ── -->
+<section class="dm-section">
+  <div class="dm-container">
+    <div class="dm-two-col">
+      <div>
+        <div class="dm-section-header">
+          <h2>Why independence matters</h2>
+        </div>
+        <p>In regulated and high-accountability environments, the credibility of a model is not determined solely by its technical quality. It is also determined by whether the review process that assessed it can itself withstand scrutiny.</p>
+        <p>Internal review — however competent — shares access to the same documentation, assumptions, and institutional framing as the development team. This limits its capacity to identify errors of omission, challenge embedded conventions, or provide the assurance that governance and regulatory frameworks require.</p>
+        <p>Independent validation removes this constraint. The validator has no prior exposure to the model, no stake in its outputs, and no professional relationship with the development team that could qualify the findings. This is the basis on which independent review carries weight in regulatory submissions and governance processes.</p>
+        <p>DataMetricus validation work is performed by the practice principal, with no subcontracting of validation judgements to junior staff or third parties. The independence basis is stated explicitly in every validation report.</p>
+        <p class="dm-micro-proof">Independence from the development team is maintained throughout and documented in every report.</p>
+      </div>
+      <div>
+        <div class="dm-section-header">
+          <h2>Engagement formats</h2>
+          <p>Validation work is structured to match the scope, timeline, and governance context of the engagement.</p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div class="dm-model-card">
+            <h3>Project-based validation</h3>
+            <p>A defined-scope review with agreed deliverables, timeline, and fee. Appropriate for initial model validation, model change reviews, or validation required ahead of a specific regulatory or governance event.</p>
+          </div>
+          <div class="dm-model-card">
+            <h3>Targeted methodological review</h3>
+            <p>A focused assessment of a specific model component, assumption set, or analytical claim, rather than the full model. Appropriate where a specific concern has been raised or where full validation has already been conducted and a targeted update is required.</p>
+          </div>
+          <div class="dm-model-card">
+            <h3>Retainer for ongoing oversight</h3>
+            <p>A structured arrangement for ongoing validation support, covering model changes, periodic assumption reviews, and governance reporting on an agreed schedule. Appropriate for organisations with model portfolios subject to regular regulatory review or internal governance cycles.</p>
+          </div>
+          <div class="dm-model-card">
+            <h3>Advisory programme collaboration</h3>
+            <p>Integration of independent validation within a broader analytical advisory engagement. Validation findings inform, but remain independent from, any modelling or research work conducted in parallel.</p>
+          </div>
+        </div>
+
+        <div style="margin-top:32px; padding:20px 24px; background:var(--dm-off-white); border:1px solid var(--dm-border); border-radius:4px;">
+          <p style="font-size:0.9375rem; color:var(--dm-muted); max-width:100%;">For organisations new to independent validation, a scoping call prior to formal engagement can establish the appropriate validation framework, agree the independence basis, and identify which model components present the greatest governance risk. No commitment is required at that stage.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RELATED PAGES ── -->
+<section class="dm-section dm-section--white">
+  <div class="dm-container">
+    <div class="dm-section-header" style="max-width:640px;">
+      <h2>Further information</h2>
+    </div>
+    <div class="dm-focus-grid" style="max-width:720px;">
+      <div class="dm-focus-card">
+        <h3>About DataMetricus</h3>
+        <p>Background on the practice, the independence basis of our work, and the working principles that govern how analytical findings are reported. Credentials and professional affiliations are stated factually.</p>
+        <a href="/about.html" style="display:inline-block; margin-top:16px; font-size:0.875rem; font-weight:500; color:var(--dm-teal);">Read about the practice →</a>
+      </div>
+      <div class="dm-focus-card">
+        <h3>Quantitative Training</h3>
+        <p>Structured programmes for analytical teams seeking to strengthen their understanding of model validation principles, statistical governance, and reproducible workflow practice.</p>
+        <a href="/training.html" style="display:inline-block; margin-top:16px; font-size:0.875rem; font-weight:500; color:var(--dm-teal);">View training programmes →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CLOSING CTA ── -->
+<section class="dm-section">
+  <div class="dm-container">
+    <div style="max-width:600px;">
+      <h2 class="dm-mb-16">Discuss an independent validation engagement</h2>
+      <p>To discuss the scope, format, and timeline of a validation engagement, contact us with a brief description of the model, its governance context, and any specific concerns or requirements that should inform the review.</p>
+      <div class="dm-mt-32" style="display:flex; gap:16px; flex-wrap:wrap;">
+        <a href="/contact.html" class="dm-btn dm-btn--primary">Contact us</a>
+        <a href="/services.html" class="dm-btn dm-btn--outline-dark">All services</a>
+      </div>
+    </div>
+  </div>
+</section>
+```

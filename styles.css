@@ -967,3 +967,94 @@ details[open] summary.dm-syllabus__toggle::after {
     min-width: auto;
   }
 }
+
+
+/* ── Model Validation page ── */
+
+.dm-validation-scope {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.dm-scope-item {
+  padding: 24px 0;
+  border-top: 1px solid var(--dm-border);
+}
+
+.dm-scope-item:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.dm-scope-item h3 {
+  font-size: 0.9375rem;
+  margin-bottom: 8px;
+}
+
+.dm-scope-item p {
+  font-size: 0.9375rem;
+  color: var(--dm-muted);
+  max-width: 100%;
+}
+
+.dm-context-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.dm-context-item {
+  padding: 20px 0;
+  border-top: 1px solid var(--dm-border);
+}
+
+.dm-context-item:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.dm-context-item__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--dm-navy);
+  margin-bottom: 6px;
+}
+
+.dm-context-item p {
+  font-size: 0.875rem;
+  color: var(--dm-muted);
+  max-width: 100%;
+}
+
+.dm-deliverables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.dm-deliverable-card {
+  background: var(--dm-off-white);
+  border: 1px solid var(--dm-border);
+  border-radius: 4px;
+  padding: 32px;
+}
+
+.dm-deliverable-card__number {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--dm-teal);
+  margin-bottom: 12px;
+}
+
+.dm-deliverable-card h3 {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.dm-deliverable-card p {
+  font-size: 0.9375rem;
+  color: var(--dm-muted);
+  max-width: 100%;
+}
