@@ -1,5 +1,7 @@
 project:
   type: website
+  resources:
+    - google7af2f480fcbc996e.html
   output-dir: _site
 
 website:
@@ -7,8 +9,6 @@ website:
   favicon: "assets/logo-transparent.png"
   site-url: "https://datametricus.github.io"
   description: "Independent quantitative advisory in health metrics, actuarial modelling, and reproducible research."
-  resources:
-  - google7af2f480fcbc996e.html
   navbar:
     logo: "assets/logo-transparent.png"
     logo-alt: "DataMetricus logo"
