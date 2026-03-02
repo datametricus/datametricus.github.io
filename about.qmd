@@ -82,7 +82,15 @@ It does not build enterprise platforms or provide opinion-led advisory detached 
   </div>
 </section>
 
-  <div class="dm-container">
+<div class="dm-container">
+<p style="margin-top:32px; font-size:0.9375rem; color:var(--dm-muted);">
+  DataMetricus occasionally works with specialist collaborators on a project basis. 
+  If your background is in actuarial modelling, applied statistics, or epidemiology 
+  and you would like to be considered for future projects, 
+  <a href="careers.html">see our collaborator page</a>.
+</p>
+
+  
   
     <div class="dm-mt-48">
       <a href="contact.html" class="dm-btn dm-btn--primary">Contact us</a>

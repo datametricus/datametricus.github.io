@@ -1,0 +1,34 @@
+---
+title: ""
+format:
+  html:
+    include-before-body: _nav.html
+    include-after-body: _footer.html
+---
+
+```{=html}
+<section class="dm-page-header">
+  <div class="dm-container">
+    <h1>Careers</h1>
+    <p>DataMetricus engages specialist collaborators on a project basis.</p>
+  </div>
+</section>
+
+<section class="dm-section dm-section--white">
+  <div class="dm-container">
+    <div style="max-width:640px;">
+      <p>DataMetricus operates as an independent advisory. It does not maintain a standing team. Where projects require additional expertise, we collaborate with a small number of trusted quantitative specialists.</p>
+
+      <p>Collaborations are engagement-specific and based on methodological alignment, demonstrated experience in regulated or oversight-driven contexts, and disciplined reproducible analytical practice.</p>
+
+      <p>We are not actively recruiting. However, we maintain a limited network of professionals in actuarial modelling, applied statistics, epidemiology, and related quantitative fields for potential future engagements.</p>
+
+      <p>If your expertise aligns with this profile and you wish to be considered for future collaboration, please send a brief introduction outlining your experience, areas of specialisation, and availability.</p>
+
+      <div class="dm-mt-32">
+        <a href="contact.html" class="dm-btn dm-btn--primary">Submit expression of interest</a>
+      </div>
+    </div>
+  </div>
+</section>
+```

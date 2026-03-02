@@ -2,12 +2,13 @@ project:
   type: website
   resources:
     - google7af2f480fcbc996e.html
+    - CNAME
   output-dir: _site
 
 website:
   title: "DataMetricus"
   favicon: "assets/logo-transparent.png"
-  site-url: "https://datametricus.github.io"
+  site-url: "https://datametricus.com"
   description: "Independent quantitative advisory in health metrics, actuarial modelling, and reproducible research."
   google-analytics:
     tracking-id: "G-XGF1P33KPV"
