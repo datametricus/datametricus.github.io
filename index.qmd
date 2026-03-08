@@ -1,6 +1,6 @@
 ---
 title: ""
-description: "Independent quantitative advisory in health metrics, actuarial modelling, and reproducible research."
+description: "AI-augmented quantitative analytics combining statistical modelling, health metrics, and reproducible research for institutions, insurers, and public policy organisations."
 format:
   html:
     include-before-body: _nav.html
@@ -11,12 +11,12 @@ format:
 <!-- HERO -->
 <section class="dm-hero">
   <div class="dm-hero__inner">
-    <p class="dm-hero__eyebrow">Quantitative Advisory</p>
-    <h1 class="dm-hero__headline">Rigorous analysis for consequential decisions.</h1>
-    <p class="dm-hero__subheadline">DataMetricus provides independent statistical and actuarial modelling, applied health metrics, and reproducible research workflows for institutions where analytical quality is non-negotiable.</p>
+    <p class="dm-hero__eyebrow">AI-Augmented Quantitative Analytics</p>
+    <h1 class="dm-hero__headline">Rigorous analysis for consequential decisions</h1>
+    <p class="dm-hero__subheadline">DataMetricus designs AI-augmented analytical workflows that combine statistical modelling, health metrics, and reproducible research to support complex decisions in research, insurance, and public policy.</p>
     <div class="dm-hero__actions">
       <a href="services.html" class="dm-btn dm-btn--primary">Explore services</a>
-      <a href="contact.html" class="dm-btn dm-btn--outline">Start a project</a>
+      <a href="contact.html" class="dm-btn dm-btn--outline">Discuss a project</a>
     </div>
   </div>
 </section>
