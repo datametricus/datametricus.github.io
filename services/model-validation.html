@@ -339,11 +339,62 @@ gtag('config', 'G-XGF1P33KPV', { 'anonymize_ip': true});
       <li><a href="../about.html">About</a></li>
       <li><a href="../contact.html">Contact</a></li>
     </ul>
-    <!-- EXAMPLE ENGAGEMENTS -->
     <div class="dm-footer__contact">
-      <a href="mailto:info@datametricus.com">info@datametricus.com</a></div>
+      <a href="mailto:info@datametricus.com">info@datametricus.com</a>
+    </div>
   </div>
 </footer>
+
+<div class="ai-fab" id="ai-button" onclick="startConversation()">
+  🎤 Ask DataMetricus AI
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/retell-client-js-sdk/dist/bundle.js"></script>
+
+<script>
+  const retellWebClient = new RetellWebClient.RetellWebClient();
+
+  async function startConversation() {
+    const btn = document.getElementById('ai-button');
+    
+    try {
+      btn.innerText = "⌛ Connecting...";
+      
+      // Point this to your bridge file on Aruba
+      // Change to .js only if you have a Node server running on Aruba
+      const response = await fetch('/api/create-call.php', { 
+        method: 'POST'
+      });
+      
+      if (!response.ok) throw new Error('Network response was not ok');
+      
+      const data = await response.json();
+      
+      // Start the call using the token from your bridge
+      retellWebClient.startCall({
+        accessToken: data.access_token,
+      });
+      
+    } catch (err) {
+      console.error("AI Connection Error:", err);
+      btn.innerText = "⚠️ Connection Failed";
+      setTimeout(() => { btn.innerText = "🎤 Ask DataMetricus AI"; }, 3000);
+    }
+    
+    retellWebClient.on('call_started', () => {
+      console.log('Call started');
+      btn.innerText = "🔴 Live: Speaking...";
+      btn.style.background = "#ff0000"; // Red highlight when live
+    });
+    
+    retellWebClient.on('call_ended', () => {
+      console.log('Call ended');
+      btn.innerText = "🎤 Ask DataMetricus AI";
+      btn.style.background = "#000"; // Back to black
+    });
+  }
+</script>
+
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
