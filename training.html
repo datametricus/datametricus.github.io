@@ -248,25 +248,44 @@ gtag('config', 'G-XGF1P33KPV', { 'anonymize_ip': true});
 <script src="https://cdn.jsdelivr.net/npm/retell-client-js-sdk/dist/bundle.js"></script>
 
 <script>
-  const retellWebClient = new RetellWebClient.RetellWebClient();
+  // We declare the variable but don't initialize it yet
+  let retellWebClient;
+
+  // This function runs once the page and all scripts are fully loaded
+  window.onload = function() {
+    try {
+      // Check if the library loaded correctly
+      if (typeof RetellWebClient !== 'undefined') {
+        retellWebClient = new RetellWebClient.RetellWebClient();
+        console.log("Retell SDK initialized successfully.");
+      } else {
+        console.error("Retell SDK failed to load from CDN.");
+      }
+    } catch (e) {
+      console.error("Error initializing Retell:", e);
+    }
+  };
 
   async function startConversation() {
+    // Safety check: Don't run if the client isn't ready
+    if (!retellWebClient) {
+      alert("AI Assistant is still loading. Please try again in a second.");
+      return;
+    }
+
     const btn = document.getElementById('ai-button');
     
     try {
       btn.innerText = "⌛ Connecting...";
       
-      // Point this to your bridge file on Aruba
-      // Change to .js only if you have a Node server running on Aruba
-      const response = await fetch('/api/create-call.php', { 
-        method: 'POST'
-      });
-      
-      if (!response.ok) throw new Error('Network response was not ok');
-      
+      // Point to your Aruba PHP bridge
+      const response = await fetch('/api/create-call.php', { method: 'POST' });
       const data = await response.json();
       
-      // Start the call using the token from your bridge
+      if (!data.access_token) {
+        throw new Error("No access token received from server.");
+      }
+
       retellWebClient.startCall({
         accessToken: data.access_token,
       });
@@ -277,20 +296,18 @@ gtag('config', 'G-XGF1P33KPV', { 'anonymize_ip': true});
       setTimeout(() => { btn.innerText = "🎤 Ask DataMetricus AI"; }, 3000);
     }
     
+    // Event Listeners for UI updates
     retellWebClient.on('call_started', () => {
-      console.log('Call started');
       btn.innerText = "🔴 Live: Speaking...";
-      btn.style.background = "#ff0000"; // Red highlight when live
+      btn.style.background = "#ff0000";
     });
     
     retellWebClient.on('call_ended', () => {
-      console.log('Call ended');
       btn.innerText = "🎤 Ask DataMetricus AI";
-      btn.style.background = "#000"; // Back to black
+      btn.style.background = "#000";
     });
   }
 </script>
-
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
