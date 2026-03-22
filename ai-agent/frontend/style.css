@@ -10,7 +10,7 @@
   --surface:     #141418;
   --surface-2:   #1c1c22;
   --border:      #2a2a32;
-  --accent:      #c8a96e;        /* warm gold — analytical, not tech-bro */
+  --accent:      #c8a96e;
   --accent-dim:  #8a7248;
   --text:        #e8e8ec;
   --text-muted:  #7a7a88;
@@ -34,6 +34,13 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Embed mode: fill the iframe fully */
+html.embed-html,
+body.embed-mode {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   min-height: 100vh;
   display: flex;
@@ -41,17 +48,17 @@ body {
 }
 
 body.embed-mode {
-  min-height: auto;
+  min-height: 100%;
   background: transparent;
-  --bg: #1a2942;
-  --surface: rgba(18, 29, 47, 0.94);
-  --surface-2: rgba(26, 41, 66, 0.96);
-  --border: rgba(255, 255, 255, 0.12);
-  --accent: #7dc6c6;
-  --accent-dim: #53a7a7;
-  --text: #f3f7fb;
-  --text-muted: rgba(243, 247, 251, 0.68);
-  --text-faint: rgba(243, 247, 251, 0.42);
+  --bg:          #1a2942;
+  --surface:     rgba(18, 29, 47, 0.94);
+  --surface-2:   rgba(26, 41, 66, 0.96);
+  --border:      rgba(255, 255, 255, 0.12);
+  --accent:      #7dc6c6;
+  --accent-dim:  #53a7a7;
+  --text:        #f3f7fb;
+  --text-muted:  rgba(243, 247, 251, 0.68);
+  --text-faint:  rgba(243, 247, 251, 0.42);
 }
 
 /* ── Typography ────────────────────────────────────────────────────────── */
@@ -104,11 +111,14 @@ main.panel {
   gap: 20px;
 }
 
+/* Embed: fill iframe height, compositor always at bottom */
 body.embed-mode main.panel {
   max-width: 100%;
+  height: 100%;
   margin: 0;
-  padding: 0;
-  gap: 14px;
+  padding: 8px;
+  gap: 8px;
+  overflow: hidden;
 }
 
 /* ── Status bar ────────────────────────────────────────────────────────── */
@@ -131,13 +141,13 @@ body.embed-mode main.panel {
   transition: background var(--transition);
 }
 
-.status-dot.idle      { background: var(--text-faint); }
+.status-dot.idle       { background: var(--text-faint); }
 .status-dot.connecting { background: var(--warn);
   animation: pulse 1.2s ease-in-out infinite; }
-.status-dot.live      { background: var(--success);
+.status-dot.live       { background: var(--success);
   animation: pulse 2s ease-in-out infinite; }
-.status-dot.error     { background: var(--danger); }
-.status-dot.closed    { background: var(--text-muted); }
+.status-dot.error      { background: var(--danger); }
+.status-dot.closed     { background: var(--text-muted); }
 
 @keyframes pulse {
   0%, 100% { opacity: 1; }
@@ -158,20 +168,16 @@ body.embed-mode main.panel {
 }
 
 .voice-status {
-  padding: 0 4px;
-  color: var(--text-muted);
   font-size: 0.78rem;
-  line-height: 1.5;
+  color: var(--text-muted);
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  background: rgba(255,255,255,0.04);
 }
 
-.voice-status[data-state="speaking"] {
-  color: var(--accent);
-}
-
-.voice-status[data-state="blocked"],
-.voice-status[data-state="error"] {
-  color: var(--warn);
-}
+.voice-status[data-state="error"]    { color: var(--danger); }
+.voice-status[data-state="blocked"]  { color: var(--warn); }
+.voice-status[data-state="speaking"] { color: var(--success); }
 
 /* ── Transcript ─────────────────────────────────────────────────────────── */
 .transcript-section {
@@ -179,10 +185,18 @@ body.embed-mode main.panel {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* In embed mode the transcript grows to fill all available space */
+body.embed-mode .transcript-section {
+  flex: 1;
+  min-height: 0;   /* critical: allows flex child to shrink below content size */
 }
 
 .transcript-header {
-  padding: 10px 16px;
+  padding: 8px 14px;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -190,10 +204,11 @@ body.embed-mode main.panel {
   color: var(--text-muted);
   border-bottom: 1px solid var(--border);
   background: var(--surface-2);
+  flex-shrink: 0;
 }
 
 .transcript-body {
-  padding: 16px;
+  padding: 14px;
   min-height: 280px;
   max-height: 420px;
   overflow-y: auto;
@@ -201,6 +216,13 @@ body.embed-mode main.panel {
   flex-direction: column;
   gap: 12px;
   scroll-behavior: smooth;
+}
+
+/* In embed mode: fill the transcript-section, max-height removed */
+body.embed-mode .transcript-body {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
 }
 
 /* Custom scrollbar */
@@ -221,7 +243,7 @@ body.embed-mode main.panel {
 .turn {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   animation: fadeIn 220ms ease;
 }
 
@@ -237,8 +259,8 @@ body.embed-mode main.panel {
   text-transform: uppercase;
 }
 
-.turn.user   .turn-label { color: var(--accent-dim); }
-.turn.agent  .turn-label { color: var(--text-muted); }
+.turn.user  .turn-label { color: var(--accent-dim); }
+.turn.agent .turn-label { color: var(--text-muted); }
 
 .turn-text {
   font-size: 0.92rem;
@@ -259,7 +281,7 @@ body.embed-mode main.panel {
   border-radius: 0 var(--radius) var(--radius) 0;
 }
 
-/* streaming cursor */
+/* Streaming cursor */
 .turn-text.streaming::after {
   content: '▌';
   color: var(--accent);
@@ -271,16 +293,50 @@ body.embed-mode main.panel {
   50%       { opacity: 0; }
 }
 
+/* Action links below agent messages */
+.turn-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-left: 14px;
+  margin-top: 2px;
+}
+
+.turn-action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 4px 10px;
+  border: 1px solid var(--accent-dim);
+  border-radius: 99px;
+  transition: background var(--transition), opacity var(--transition);
+}
+
+.turn-action-link:hover {
+  background: rgba(200, 169, 110, 0.12);
+  opacity: 0.9;
+}
+
+body.embed-mode .turn-action-link {
+  color: var(--accent);
+  border-color: var(--accent-dim);
+}
+
 /* ── Lead summary panel ─────────────────────────────────────────────────── */
 .lead-panel {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .lead-panel-header {
-  padding: 10px 16px;
+  padding: 8px 14px;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -292,13 +348,13 @@ body.embed-mode main.panel {
 
 .lead-grid {
   display: grid;
-  grid-template-columns: 160px 1fr;
+  grid-template-columns: 140px 1fr;
   gap: 0;
-  padding: 8px 0;
+  padding: 6px 0;
 }
 
 .lead-grid dt {
-  padding: 6px 16px;
+  padding: 5px 14px;
   font-size: 0.75rem;
   color: var(--text-muted);
   font-weight: 600;
@@ -307,14 +363,14 @@ body.embed-mode main.panel {
 }
 
 .lead-grid dd {
-  padding: 6px 16px;
+  padding: 5px 14px;
   font-size: 0.82rem;
   color: var(--text);
   font-family: var(--font-mono);
 }
 
 .missing-notice {
-  padding: 10px 16px;
+  padding: 8px 14px;
   font-size: 0.78rem;
   color: var(--warn);
   border-top: 1px solid var(--border);
@@ -326,16 +382,19 @@ body.embed-mode main.panel {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  flex-shrink: 0;
 }
 
+/* ── Composer — always anchored at the bottom in embed mode ─────────────── */
 .composer {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 16px;
+  gap: 8px;
+  padding: 12px 14px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  flex-shrink: 0;   /* never let composer be squeezed away */
 }
 
 .composer-label {
@@ -348,14 +407,22 @@ body.embed-mode main.panel {
 
 .composer-input {
   width: 100%;
-  min-height: 110px;
+  min-height: 60px;   /* compact in embed mode */
+  max-height: 120px;
   resize: vertical;
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   color: var(--text);
   font: inherit;
-  padding: 12px 14px;
+  font-size: 0.9rem;
+  padding: 10px 12px;
+  line-height: 1.5;
+}
+
+/* Standalone (non-embed) gets a taller textarea */
+body:not(.embed-mode) .composer-input {
+  min-height: 100px;
 }
 
 .composer-input:focus {
@@ -363,16 +430,23 @@ body.embed-mode main.panel {
   border-color: var(--accent-dim);
 }
 
+.composer-hint {
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  text-align: right;
+}
+
 .composer-actions {
   display: flex;
   justify-content: flex-end;
 }
 
+/* ── Buttons ────────────────────────────────────────────────────────────── */
 .btn {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  padding: 11px 22px;
+  padding: 10px 20px;
   border-radius: var(--radius);
   border: 1px solid transparent;
   font-family: var(--font);
@@ -401,34 +475,31 @@ body.embed-mode main.panel {
   color: #0d0d0f;
   border-color: var(--accent);
 }
-.btn-primary:not(:disabled):hover {
-  opacity: 0.88;
-}
+.btn-primary:not(:disabled):hover { opacity: 0.88; }
 
 .btn-danger {
   background: transparent;
   color: var(--danger);
   border-color: var(--danger);
 }
-.btn-danger:not(:disabled):hover {
-  background: rgba(200, 88, 88, 0.1);
-}
+.btn-danger:not(:disabled):hover { background: rgba(200, 88, 88, 0.1); }
 
 /* ── Error notice ───────────────────────────────────────────────────────── */
 .error-notice {
-  padding: 12px 16px;
+  padding: 10px 14px;
   background: rgba(200, 88, 88, 0.1);
   border: 1px solid rgba(200, 88, 88, 0.35);
   border-radius: var(--radius);
   color: var(--danger);
   font-size: 0.84rem;
   line-height: 1.5;
+  flex-shrink: 0;
 }
 
 /* ── Footer ─────────────────────────────────────────────────────────────── */
 .site-footer {
   border-top: 1px solid var(--border);
-  padding: 14px 24px;
+  padding: 12px 24px;
   text-align: center;
   font-size: 0.73rem;
   color: var(--text-faint);
@@ -436,11 +507,14 @@ body.embed-mode main.panel {
   flex-shrink: 0;
 }
 
+/* ── Embed-mode overrides ────────────────────────────────────────────────── */
 body.embed-mode .site-header,
 body.embed-mode .site-footer,
 body.embed-mode .backend-note,
 body.embed-mode .status-bar,
-body.embed-mode .lead-panel {
+body.embed-mode .lead-panel,
+body.embed-mode .controls,
+body.embed-mode #modeNote {
   display: none;
 }
 
@@ -448,15 +522,6 @@ body.embed-mode .transcript-section,
 body.embed-mode .composer,
 body.embed-mode .error-notice {
   border-radius: 10px;
-}
-
-body.embed-mode .transcript-body {
-  min-height: 240px;
-  max-height: 320px;
-}
-
-body.embed-mode .controls {
-  display: none;
 }
 
 body.embed-mode .transcript-header,
@@ -468,5 +533,5 @@ body.embed-mode .composer-label {
 @media (max-width: 520px) {
   .controls { flex-direction: column; }
   .btn      { width: 100%; justify-content: center; }
-  .lead-grid { grid-template-columns: 120px 1fr; }
+  .lead-grid { grid-template-columns: 110px 1fr; }
 }
