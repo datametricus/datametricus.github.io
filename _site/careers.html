@@ -108,11 +108,36 @@ gtag('config', 'G-XGF1P33KPV', { 'anonymize_ip': true});
       <li><a href="./about.html">About</a></li>
       <li><a href="./contact.html">Contact</a></li>
     </ul>
-    <!-- EXAMPLE ENGAGEMENTS -->
     <div class="dm-footer__contact">
-      <a href="mailto:info@datametricus.com">info@datametricus.com</a></div>
+      <a href="mailto:info@datametricus.com">info@datametricus.com</a>
+    </div>
   </div>
+  
 </footer>
+
+<div class="ai-fab" id="ai-button" onclick="openVoiceAssistant()">
+  Ask DataMetricus AI
+</div>
+
+<script>
+  function buildVoiceAssistantUrl(options = {}) {
+    const voiceUrl = new URL('/ai-agent/frontend/index.html', window.location.origin);
+    voiceUrl.searchParams.set('mode', 'browser');
+    if (options.embed) voiceUrl.searchParams.set('embed', '1');
+    if (options.autostart) voiceUrl.searchParams.set('autostart', '1');
+    return voiceUrl.toString();
+  }
+
+  function openVoiceAssistant() {
+    if (window.location.pathname.endsWith('/index.html') || window.location.pathname === '/' || window.location.pathname === '/index') {
+      if (typeof toggleHomepageAssistant === 'function') {
+        toggleHomepageAssistant(true);
+        return;
+      }
+    }
+    window.open(buildVoiceAssistantUrl(), '_blank', 'noopener');
+  }
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")

@@ -3,6 +3,7 @@ project:
   resources:
     - google7af2f480fcbc996e.html
     - CNAME
+    - ai-agent/frontend/**
   output-dir: _site
 
 website:

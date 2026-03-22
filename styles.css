@@ -179,13 +179,21 @@ a:hover {
 /* ── Hero ── */
 .dm-hero {
   background: var(--dm-navy);
-  padding: 96px 0 88px;
+  padding: 96px 0 104px;
 }
 
 .dm-hero__inner {
   max-width: var(--dm-max-width);
   margin: 0 auto;
   padding: 0 24px;
+  position: relative;
+  min-height: 760px;
+}
+
+.dm-hero__copy {
+  min-width: 0;
+  max-width: 680px;
+  padding-right: 40px;
 }
 
 .dm-hero__eyebrow {
@@ -220,6 +228,82 @@ a:hover {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+}
+
+.dm-assistant-shell {
+  position: absolute;
+  right: 4px;
+  top: 50px;
+  width: min(370px, calc(100% - 48px));
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04)),
+    rgba(12, 18, 30, 0.72);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 22px;
+  padding: 16px;
+  box-shadow: 0 30px 80px rgba(6, 12, 24, 0.42);
+  backdrop-filter: blur(18px);
+}
+
+.dm-assistant-shell__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 6px 6px 16px;
+  cursor: grab;
+  user-select: none;
+}
+
+.dm-assistant-shell__eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.52);
+  margin-bottom: 4px;
+}
+
+.dm-assistant-shell__header h2 {
+  color: var(--dm-white);
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.dm-assistant-shell__close {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.84);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  padding: 9px 14px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.dm-assistant-shell__close:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.dm-assistant-shell__note {
+  color: rgba(255,255,255,0.62);
+  font-size: 0.86rem;
+  line-height: 1.5;
+  margin: 0 6px 14px;
+}
+
+.dm-assistant-shell__frame {
+  width: 100%;
+  height: 560px;
+  border: none;
+  border-radius: 16px;
+  background: transparent;
+}
+
+.dm-assistant-shell--dragging {
+  cursor: grabbing;
+}
+
+.dm-assistant-shell--dragging .dm-assistant-shell__header {
+  cursor: grabbing;
 }
 
 /* ── CTA Buttons ── */
@@ -948,6 +1032,20 @@ details[open] summary.dm-syllabus__toggle::after {
     padding: 64px 0 56px;
   }
 
+  .dm-hero__inner {
+    min-height: auto;
+  }
+
+  .dm-assistant-shell {
+    position: static;
+    width: 100%;
+    margin-top: 28px;
+  }
+
+  .dm-assistant-shell__frame {
+    height: 560px;
+  }
+
   .dm-training-teaser {
     flex-direction: column;
     padding: 32px 24px;
@@ -1057,4 +1155,18 @@ details[open] summary.dm-syllabus__toggle::after {
   font-size: 0.9375rem;
   color: var(--dm-muted);
   max-width: 100%;
+}
+
+.ai-fab {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #000; /* Match DataMetricus branding */
+  color: white;
+  border-radius: 50px;
+  padding: 15px 25px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 1000;
+  border: 1px solid #333;
 }

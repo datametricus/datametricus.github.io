@@ -69,15 +69,189 @@ gtag('config', 'G-XGF1P33KPV', { 'anonymize_ip': true});
 <!-- HERO -->
 <section class="dm-hero">
   <div class="dm-hero__inner">
-    <p class="dm-hero__eyebrow">AI-Augmented Quantitative Analytics</p>
-    <h1 class="dm-hero__headline">Rigorous analysis for consequential decisions</h1>
-    <p class="dm-hero__subheadline">DataMetricus designs AI-augmented analytical workflows that combine statistical modelling, health metrics, and reproducible research to support complex decisions in research, insurance, and public policy.</p>
-    <div class="dm-hero__actions">
-      <a href="services.html" class="dm-btn dm-btn--primary">Explore services</a>
-      <a href="contact.html" class="dm-btn dm-btn--outline">Discuss a project</a>
+    <div class="dm-hero__copy">
+      <p class="dm-hero__eyebrow">AI-Augmented Quantitative Analytics</p>
+      <h1 class="dm-hero__headline">Rigorous analysis for consequential decisions</h1>
+      <p class="dm-hero__subheadline">DataMetricus designs AI-augmented analytical workflows that combine statistical modelling, health metrics, and reproducible research to support complex decisions in research, insurance, and public policy.</p>
+      <div class="dm-hero__actions">
+        <a href="services.html" class="dm-btn dm-btn--primary">Explore services</a>
+        <a href="contact.html" class="dm-btn dm-btn--outline">Discuss a project</a>
+        <button onclick="toggleHomepageAssistant(true)" class="dm-btn dm-btn--outline" type="button">
+        <span class="dm-icon-pulse"></span> Speak with our AI Assistant
+        </button>
+      </div>
     </div>
+
+    <aside class="dm-assistant-shell" id="homepageAssistant" hidden="">
+      <div class="dm-assistant-shell__header">
+        <div>
+          <p class="dm-assistant-shell__eyebrow">DataMetricus Assistant</p>
+          <h2 class="anchored">Ask about services or training</h2>
+        </div>
+        <button class="dm-assistant-shell__close" type="button" onclick="toggleHomepageAssistant(false)" aria-label="Close assistant">Dismiss</button>
+      </div>
+      <iframe id="homepageAssistantFrame" class="dm-assistant-shell__frame" title="DataMetricus Assistant" loading="lazy" allow="microphone; autoplay"></iframe>
+    </aside>
   </div>
 </section>
+
+<script>
+var dmInitialGreeting = "Welcome to DataMetricus.";
+var dmHomepageVoice = null;
+var dmSpeechUnlocked = false;
+var dmActiveSpeechId = null;
+
+function pickHomepageVoice() {
+  var voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  if (!voices || !voices.length) return null;
+  return voices[0];
+}
+
+function unlockHomepageSpeech() {
+  if (!window.speechSynthesis) return false;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.resume();
+
+  var blank = new SpeechSynthesisUtterance(" ");
+  blank.volume = 0.01;
+  blank.rate = 2;
+  window.speechSynthesis.speak(blank);
+  dmSpeechUnlocked = true;
+  return true;
+}
+
+function notifyAssistantSpeechStatus(targetWindow, speechId, status) {
+  if (!targetWindow || !speechId) return;
+  targetWindow.postMessage({ type: 'dm-speak-status', speechId: speechId, status: status }, window.location.origin);
+}
+
+function speakHomepageAssistant(text, speechId, targetWindow) {
+  if (!window.speechSynthesis || !text) {
+    notifyAssistantSpeechStatus(targetWindow, speechId, 'error');
+    return;
+  }
+  if (!dmSpeechUnlocked) {
+    notifyAssistantSpeechStatus(targetWindow, speechId, 'blocked');
+    return;
+  }
+
+  dmActiveSpeechId = speechId || null;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.resume();
+
+  function buildUtterance() {
+    var utterance = new SpeechSynthesisUtterance(text);
+    if (!dmHomepageVoice) dmHomepageVoice = pickHomepageVoice();
+    if (dmHomepageVoice) utterance.voice = dmHomepageVoice;
+    utterance.lang = 'en-US';
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+    utterance.onstart = function () {
+      notifyAssistantSpeechStatus(targetWindow, speechId, 'started');
+    };
+    utterance.onend = function () {
+      if (!dmActiveSpeechId || dmActiveSpeechId === speechId) {
+        notifyAssistantSpeechStatus(targetWindow, speechId, 'done');
+      }
+    };
+    utterance.onerror = function () {
+      notifyAssistantSpeechStatus(targetWindow, speechId, 'error');
+    };
+    return utterance;
+  }
+
+  window.speechSynthesis.speak(buildUtterance());
+}
+
+function toggleHomepageAssistant(open) {
+  var shell = document.getElementById('homepageAssistant');
+  var frame = document.getElementById('homepageAssistantFrame');
+  if (!shell || !frame) return;
+
+  if (open) {
+    unlockHomepageSpeech();
+    shell.hidden = false;
+    if (!frame.src) {
+      frame.src = buildVoiceAssistantUrl({ embed: true, autostart: true });
+      frame.onload = function () {
+        if (frame.contentWindow) {
+          frame.contentWindow.postMessage({ type: 'dm-start-assistant' }, window.location.origin);
+        }
+      };
+    } else if (frame.contentWindow) {
+      frame.contentWindow.postMessage({ type: 'dm-start-assistant' }, window.location.origin);
+    }
+    speakHomepageAssistant(dmInitialGreeting, 'homepage-launch', frame.contentWindow || null);
+  } else {
+    window.speechSynthesis?.cancel?.();
+    dmActiveSpeechId = null;
+    shell.hidden = true;
+  }
+}
+
+var dmDragState = null;
+
+function startAssistantDrag(event) {
+  var shell = document.getElementById('homepageAssistant');
+  if (!shell || event.target.closest('.dm-assistant-shell__close')) return;
+
+  var rect = shell.getBoundingClientRect();
+  dmDragState = {
+    offsetX: event.clientX - rect.left,
+    offsetY: event.clientY - rect.top
+  };
+
+  shell.classList.add('dm-assistant-shell--dragging');
+  shell.style.left = rect.left + 'px';
+  shell.style.top = rect.top + 'px';
+  shell.style.right = 'auto';
+  shell.style.position = 'fixed';
+
+  document.addEventListener('pointermove', dragAssistantShell);
+  document.addEventListener('pointerup', stopAssistantDrag, { once: true });
+}
+
+function dragAssistantShell(event) {
+  var shell = document.getElementById('homepageAssistant');
+  if (!shell || !dmDragState) return;
+
+  var left = Math.max(16, Math.min(window.innerWidth - shell.offsetWidth - 16, event.clientX - dmDragState.offsetX));
+  var top = Math.max(84, Math.min(window.innerHeight - shell.offsetHeight - 16, event.clientY - dmDragState.offsetY));
+
+  shell.style.left = left + 'px';
+  shell.style.top = top + 'px';
+}
+
+function stopAssistantDrag() {
+  var shell = document.getElementById('homepageAssistant');
+  if (shell) shell.classList.remove('dm-assistant-shell--dragging');
+  dmDragState = null;
+  document.removeEventListener('pointermove', dragAssistantShell);
+}
+
+window.addEventListener('load', function () {
+  dmHomepageVoice = pickHomepageVoice();
+  var header = document.querySelector('.dm-assistant-shell__header');
+  if (header) header.addEventListener('pointerdown', startAssistantDrag);
+});
+
+window.addEventListener('message', function (event) {
+  if (event.origin !== window.location.origin) return;
+  if (event.data && event.data.type === 'dm-speech-unlock') {
+    unlockHomepageSpeech();
+    return;
+  }
+  if (!event.data || event.data.type !== 'dm-speak-request') return;
+  speakHomepageAssistant(event.data.text, event.data.speechId, event.source);
+});
+
+if (window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = function () {
+    dmHomepageVoice = pickHomepageVoice();
+  };
+}
+</script>
 
 <!-- FOCUS AREAS -->
 <section class="dm-section dm-section--white">
@@ -229,11 +403,36 @@ gtag('config', 'G-XGF1P33KPV', { 'anonymize_ip': true});
       <li><a href="./about.html">About</a></li>
       <li><a href="./contact.html">Contact</a></li>
     </ul>
-    <!-- EXAMPLE ENGAGEMENTS -->
     <div class="dm-footer__contact">
-      <a href="mailto:info@datametricus.com">info@datametricus.com</a></div>
+      <a href="mailto:info@datametricus.com">info@datametricus.com</a>
+    </div>
   </div>
+  
 </footer>
+
+<div class="ai-fab" id="ai-button" onclick="openVoiceAssistant()">
+  Ask DataMetricus AI
+</div>
+
+<script>
+  function buildVoiceAssistantUrl(options = {}) {
+    const voiceUrl = new URL('/ai-agent/frontend/index.html', window.location.origin);
+    voiceUrl.searchParams.set('mode', 'browser');
+    if (options.embed) voiceUrl.searchParams.set('embed', '1');
+    if (options.autostart) voiceUrl.searchParams.set('autostart', '1');
+    return voiceUrl.toString();
+  }
+
+  function openVoiceAssistant() {
+    if (window.location.pathname.endsWith('/index.html') || window.location.pathname === '/' || window.location.pathname === '/index') {
+      if (typeof toggleHomepageAssistant === 'function') {
+        toggleHomepageAssistant(true);
+        return;
+      }
+    }
+    window.open(buildVoiceAssistantUrl(), '_blank', 'noopener');
+  }
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
