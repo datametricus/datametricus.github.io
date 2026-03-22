@@ -156,11 +156,11 @@ function appendTurn(role, text, actions = []) {
     actionsEl.className = "turn-actions";
     actions.forEach(({ label: linkLabel, href }) => {
       const a = document.createElement("a");
-      a.href      = href;
+      a.href        = href;
       a.textContent = linkLabel;
-      a.className = "turn-action-link";
-      a.target    = "_blank";
-      a.rel       = "noopener noreferrer";
+      a.className   = "turn-action-link";
+      a.target      = "_blank";
+      a.rel         = "noopener noreferrer";
       actionsEl.appendChild(a);
     });
     wrapper.appendChild(actionsEl);

@@ -102,6 +102,8 @@ gtag('config', 'G-XGF1P33KPV', { 'anonymize_ip': true});
   top: 74px;
   right: 24px;
   width: 420px;
+  height: min(760px, calc(100vh - 90px));
+  min-height: 560px;
   max-height: calc(100vh - 90px);
   z-index: 1100;
   background: #111827;
@@ -111,6 +113,10 @@ gtag('config', 'G-XGF1P33KPV', { 'anonymize_ip': true});
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.dm-assistant-shell[hidden] {
+  display: none;
 }
 
 .dm-assistant-shell__header {
@@ -170,6 +176,8 @@ gtag('config', 'G-XGF1P33KPV', { 'anonymize_ip': true});
     right: 0;
     left: 0;
     width: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
     max-height: 100dvh;
     border-radius: 0;
   }
