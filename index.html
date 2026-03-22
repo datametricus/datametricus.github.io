@@ -95,73 +95,120 @@ gtag('config', 'G-XGF1P33KPV', { 'anonymize_ip': true});
   </div>
 </section>
 
+<style>
+/* ── Assistant shell — fixed overlay, no drag ──────────────────────────── */
+.dm-assistant-shell {
+  position: fixed;
+  top: 74px;
+  right: 24px;
+  width: 420px;
+  height: min(760px, calc(100vh - 90px));
+  min-height: 560px;
+  max-height: calc(100vh - 90px);
+  z-index: 1100;
+  background: #111827;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.55);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dm-assistant-shell[hidden] {
+  display: none;
+}
+
+.dm-assistant-shell__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.03);
+}
+
+.dm-assistant-shell__eyebrow {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7dc6c6;
+  margin-bottom: 2px;
+}
+
+.dm-assistant-shell__header h2 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f3f7fb;
+  letter-spacing: -0.01em;
+}
+
+.dm-assistant-shell__close {
+  flex-shrink: 0;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  color: rgba(243,247,251,0.7);
+  cursor: pointer;
+  transition: background 150ms ease;
+  margin-top: 2px;
+}
+.dm-assistant-shell__close:hover { background: rgba(255,255,255,0.12); }
+
+.dm-assistant-shell__frame {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  border: none;
+  display: block;
+  background: transparent;
+}
+
+@media (max-width: 480px) {
+  .dm-assistant-shell {
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+}
+</style>
+
 <script>
-var dmInitialGreeting = "Welcome to DataMetricus.";
-var dmHomepageVoice = null;
+var dmHomepageVoice  = null;
 var dmSpeechUnlocked = false;
-var dmActiveSpeechId = null;
 
 function pickHomepageVoice() {
   var voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
   if (!voices || !voices.length) return null;
-  return voices[0];
+  return (
+    voices.find(function(v) { return v.name === 'Samantha'; }) ||
+    voices.find(function(v) { return v.name === 'Daniel'; })   ||
+    voices.find(function(v) { return /^en/i.test(v.lang); })   ||
+    voices[0]
+  );
 }
 
 function unlockHomepageSpeech() {
   if (!window.speechSynthesis) return false;
   window.speechSynthesis.cancel();
   window.speechSynthesis.resume();
-
-  var blank = new SpeechSynthesisUtterance(" ");
+  var blank = new SpeechSynthesisUtterance(' ');
   blank.volume = 0.01;
-  blank.rate = 2;
+  blank.rate   = 2;
   window.speechSynthesis.speak(blank);
   dmSpeechUnlocked = true;
   return true;
-}
-
-function notifyAssistantSpeechStatus(targetWindow, speechId, status) {
-  if (!targetWindow || !speechId) return;
-  targetWindow.postMessage({ type: 'dm-speak-status', speechId: speechId, status: status }, window.location.origin);
-}
-
-function speakHomepageAssistant(text, speechId, targetWindow) {
-  if (!window.speechSynthesis || !text) {
-    notifyAssistantSpeechStatus(targetWindow, speechId, 'error');
-    return;
-  }
-  if (!dmSpeechUnlocked) {
-    notifyAssistantSpeechStatus(targetWindow, speechId, 'blocked');
-    return;
-  }
-
-  dmActiveSpeechId = speechId || null;
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.resume();
-
-  function buildUtterance() {
-    var utterance = new SpeechSynthesisUtterance(text);
-    if (!dmHomepageVoice) dmHomepageVoice = pickHomepageVoice();
-    if (dmHomepageVoice) utterance.voice = dmHomepageVoice;
-    utterance.lang = 'en-US';
-    utterance.rate = 1;
-    utterance.pitch = 1;
-    utterance.volume = 1;
-    utterance.onstart = function () {
-      notifyAssistantSpeechStatus(targetWindow, speechId, 'started');
-    };
-    utterance.onend = function () {
-      if (!dmActiveSpeechId || dmActiveSpeechId === speechId) {
-        notifyAssistantSpeechStatus(targetWindow, speechId, 'done');
-      }
-    };
-    utterance.onerror = function () {
-      notifyAssistantSpeechStatus(targetWindow, speechId, 'error');
-    };
-    return utterance;
-  }
-
-  window.speechSynthesis.speak(buildUtterance());
 }
 
 function toggleHomepageAssistant(open) {
@@ -171,79 +218,37 @@ function toggleHomepageAssistant(open) {
 
   if (open) {
     unlockHomepageSpeech();
+    dmHomepageVoice = pickHomepageVoice();
     shell.hidden = false;
+
     if (!frame.src) {
       frame.src = buildVoiceAssistantUrl({ embed: true, autostart: true });
       frame.onload = function () {
         if (frame.contentWindow) {
-          frame.contentWindow.postMessage({ type: 'dm-start-assistant' }, window.location.origin);
+          frame.contentWindow.postMessage(
+            { type: 'dm-start-assistant' },
+            window.location.origin
+          );
         }
       };
     } else if (frame.contentWindow) {
-      frame.contentWindow.postMessage({ type: 'dm-start-assistant' }, window.location.origin);
+      frame.contentWindow.postMessage(
+        { type: 'dm-start-assistant' },
+        window.location.origin
+      );
     }
-    speakHomepageAssistant(dmInitialGreeting, 'homepage-launch', frame.contentWindow || null);
   } else {
-    window.speechSynthesis?.cancel?.();
-    dmActiveSpeechId = null;
+    window.speechSynthesis && window.speechSynthesis.cancel();
     shell.hidden = true;
+    frame.src    = '';   // reset so next open starts fresh
   }
 }
-
-var dmDragState = null;
-
-function startAssistantDrag(event) {
-  var shell = document.getElementById('homepageAssistant');
-  if (!shell || event.target.closest('.dm-assistant-shell__close')) return;
-
-  var rect = shell.getBoundingClientRect();
-  dmDragState = {
-    offsetX: event.clientX - rect.left,
-    offsetY: event.clientY - rect.top
-  };
-
-  shell.classList.add('dm-assistant-shell--dragging');
-  shell.style.left = rect.left + 'px';
-  shell.style.top = rect.top + 'px';
-  shell.style.right = 'auto';
-  shell.style.position = 'fixed';
-
-  document.addEventListener('pointermove', dragAssistantShell);
-  document.addEventListener('pointerup', stopAssistantDrag, { once: true });
-}
-
-function dragAssistantShell(event) {
-  var shell = document.getElementById('homepageAssistant');
-  if (!shell || !dmDragState) return;
-
-  var left = Math.max(16, Math.min(window.innerWidth - shell.offsetWidth - 16, event.clientX - dmDragState.offsetX));
-  var top = Math.max(84, Math.min(window.innerHeight - shell.offsetHeight - 16, event.clientY - dmDragState.offsetY));
-
-  shell.style.left = left + 'px';
-  shell.style.top = top + 'px';
-}
-
-function stopAssistantDrag() {
-  var shell = document.getElementById('homepageAssistant');
-  if (shell) shell.classList.remove('dm-assistant-shell--dragging');
-  dmDragState = null;
-  document.removeEventListener('pointermove', dragAssistantShell);
-}
-
-window.addEventListener('load', function () {
-  dmHomepageVoice = pickHomepageVoice();
-  var header = document.querySelector('.dm-assistant-shell__header');
-  if (header) header.addEventListener('pointerdown', startAssistantDrag);
-});
 
 window.addEventListener('message', function (event) {
   if (event.origin !== window.location.origin) return;
   if (event.data && event.data.type === 'dm-speech-unlock') {
     unlockHomepageSpeech();
-    return;
   }
-  if (!event.data || event.data.type !== 'dm-speak-request') return;
-  speakHomepageAssistant(event.data.text, event.data.speechId, event.source);
 });
 
 if (window.speechSynthesis) {
@@ -251,6 +256,10 @@ if (window.speechSynthesis) {
     dmHomepageVoice = pickHomepageVoice();
   };
 }
+
+window.addEventListener('load', function () {
+  dmHomepageVoice = pickHomepageVoice();
+});
 </script>
 
 <!-- FOCUS AREAS -->
