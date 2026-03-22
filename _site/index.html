@@ -96,15 +96,24 @@ gtag('config', 'G-XGF1P33KPV', { 'anonymize_ip': true});
 </section>
 
 <script>
-var dmInitialGreeting = "Welcome to DataMetricus.";
 var dmHomepageVoice = null;
-var dmSpeechUnlocked = false;
-var dmActiveSpeechId = null;
+var dmSpeechUnlocked = false; 
+
+//function pickHomepageVoice() {
+//  var voices = window.speechSynthesis ? window.//speechSynthesis.getVoices() : [];
+//  if (!voices || !voices.length) return null;
+//  return voices[0];
+//}
 
 function pickHomepageVoice() {
   var voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
   if (!voices || !voices.length) return null;
-  return voices[0];
+  return (
+    voices.find(function(v) { return v.name === 'Samantha'; }) ||
+    voices.find(function(v) { return v.name === 'Daniel'; }) ||
+    voices.find(function(v) { return /^en/i.test(v.lang); }) ||
+    voices[0]
+  );
 }
 
 function unlockHomepageSpeech() {
@@ -118,50 +127,6 @@ function unlockHomepageSpeech() {
   window.speechSynthesis.speak(blank);
   dmSpeechUnlocked = true;
   return true;
-}
-
-function notifyAssistantSpeechStatus(targetWindow, speechId, status) {
-  if (!targetWindow || !speechId) return;
-  targetWindow.postMessage({ type: 'dm-speak-status', speechId: speechId, status: status }, window.location.origin);
-}
-
-function speakHomepageAssistant(text, speechId, targetWindow) {
-  if (!window.speechSynthesis || !text) {
-    notifyAssistantSpeechStatus(targetWindow, speechId, 'error');
-    return;
-  }
-  if (!dmSpeechUnlocked) {
-    notifyAssistantSpeechStatus(targetWindow, speechId, 'blocked');
-    return;
-  }
-
-  dmActiveSpeechId = speechId || null;
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.resume();
-
-  function buildUtterance() {
-    var utterance = new SpeechSynthesisUtterance(text);
-    if (!dmHomepageVoice) dmHomepageVoice = pickHomepageVoice();
-    if (dmHomepageVoice) utterance.voice = dmHomepageVoice;
-    utterance.lang = 'en-US';
-    utterance.rate = 1;
-    utterance.pitch = 1;
-    utterance.volume = 1;
-    utterance.onstart = function () {
-      notifyAssistantSpeechStatus(targetWindow, speechId, 'started');
-    };
-    utterance.onend = function () {
-      if (!dmActiveSpeechId || dmActiveSpeechId === speechId) {
-        notifyAssistantSpeechStatus(targetWindow, speechId, 'done');
-      }
-    };
-    utterance.onerror = function () {
-      notifyAssistantSpeechStatus(targetWindow, speechId, 'error');
-    };
-    return utterance;
-  }
-
-  window.speechSynthesis.speak(buildUtterance());
 }
 
 function toggleHomepageAssistant(open) {
@@ -182,11 +147,10 @@ function toggleHomepageAssistant(open) {
     } else if (frame.contentWindow) {
       frame.contentWindow.postMessage({ type: 'dm-start-assistant' }, window.location.origin);
     }
-    speakHomepageAssistant(dmInitialGreeting, 'homepage-launch', frame.contentWindow || null);
   } else {
     window.speechSynthesis?.cancel?.();
-    dmActiveSpeechId = null;
     shell.hidden = true;
+    frame.src = ''; 
   }
 }
 
@@ -240,10 +204,7 @@ window.addEventListener('message', function (event) {
   if (event.origin !== window.location.origin) return;
   if (event.data && event.data.type === 'dm-speech-unlock') {
     unlockHomepageSpeech();
-    return;
   }
-  if (!event.data || event.data.type !== 'dm-speak-request') return;
-  speakHomepageAssistant(event.data.text, event.data.speechId, event.source);
 });
 
 if (window.speechSynthesis) {

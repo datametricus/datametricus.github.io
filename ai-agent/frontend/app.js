@@ -1,9 +1,6 @@
 "use strict";
 
 const INITIAL_GREETING = "Hello, welcome to DataMetricus. I'm the DataMetricus assistant. Please type your reply in the chat. Are you looking for advisory support or training?";
-const VOICE_WELCOME_GREETING = "Hello! I'm your AI assistant. How can I help you today?";
-const GREETING_STORAGE_KEY = "dm-voice-greeted";
-const MAX_SPEECH_CHUNK_LENGTH = 220;
 
 function queryParam(name) {
   return new URLSearchParams(window.location.search).get(name) || "";
@@ -19,6 +16,7 @@ const btnStart = document.getElementById("btnStart");
 const btnStop = document.getElementById("btnStop");
 const btnSend = document.getElementById("btnSend");
 const btnReplay = document.getElementById("btnReplay");
+const btnEnableVoice = document.getElementById("btnEnableVoice");
 const chatInput = document.getElementById("chatInput");
 const composer = document.getElementById("composer");
 const statusDot = document.getElementById("statusDot");
@@ -56,12 +54,10 @@ const lead = {
 
 let preferredVoice = null;
 let sessionStarted = false;
+let startInProgress = false;
 let localSessionId = "";
 let lastAssistantReply = "";
-let pendingParentSpeechId = null;
 let speechEnabled = false;
-let speechToken = 0;
-let speechQueue = Promise.resolve();
 
 if (EMBED_MODE) document.body.classList.add("embed-mode");
 if (backendUrlValue) {
@@ -140,13 +136,6 @@ function requestParentSpeechUnlock() {
   window.parent.postMessage({ type: "dm-speech-unlock" }, window.location.origin);
 }
 
-function hasGreetedThisSession() {
-  return window.sessionStorage?.getItem(GREETING_STORAGE_KEY) === "1";
-}
-
-function markGreetingDone() {
-  window.sessionStorage?.setItem?.(GREETING_STORAGE_KEY, "1");
-}
 
 function normaliseSpeechText(text) {
   if (typeof text !== "string") {
@@ -155,55 +144,6 @@ function normaliseSpeechText(text) {
   }
 
   return text.replace(/\s+/g, " ").trim();
-}
-
-function splitIntoSpeechChunks(text) {
-  const cleaned = normaliseSpeechText(text);
-  if (!cleaned) return [];
-
-  const sentences = cleaned.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [cleaned];
-  const chunks = [];
-  let current = "";
-
-  sentences.forEach((sentence) => {
-    const trimmed = sentence.trim();
-    if (!trimmed) return;
-
-    if (!current) {
-      current = trimmed;
-      return;
-    }
-
-    if (`${current} ${trimmed}`.length <= MAX_SPEECH_CHUNK_LENGTH) {
-      current = `${current} ${trimmed}`;
-      return;
-    }
-
-    chunks.push(current);
-    if (trimmed.length <= MAX_SPEECH_CHUNK_LENGTH) {
-      current = trimmed;
-      return;
-    }
-
-    const words = trimmed.split(/\s+/);
-    current = "";
-    words.forEach((word) => {
-      if (!current) {
-        current = word;
-        return;
-      }
-
-      if (`${current} ${word}`.length <= MAX_SPEECH_CHUNK_LENGTH) {
-        current = `${current} ${word}`;
-      } else {
-        chunks.push(current);
-        current = word;
-      }
-    });
-  });
-
-  if (current) chunks.push(current);
-  return chunks;
 }
 
 function waitForVoices(timeoutMs = 2000) {
@@ -303,11 +243,17 @@ function appendAgentTurnProgressive(text, options = {}) {
 function chooseSpeechVoice() {
   const voices = window.speechSynthesis?.getVoices?.() || [];
   if (!voices.length) return null;
-  return voices[0];
+
+  return (
+    voices.find(v => v.name === "Samantha") ||
+    voices.find(v => v.name === "Daniel") ||
+    voices.find(v => /^en(-|_)?(US|GB)?/i.test(v.lang)) ||
+    voices[0] ||
+    null
+  );
 }
 
 function stopAssistantSpeech() {
-  speechToken += 1;
   window.speechSynthesis?.cancel?.();
 }
 
@@ -323,103 +269,89 @@ async function unlockSpeech() {
   requestParentSpeechUnlock();
   await waitForVoices();
   preferredVoice = chooseSpeechVoice();
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.resume();
   setVoiceStatus(EMBED_MODE ? "Embedded voice is ready." : "Voice is ready.", "");
   return true;
 }
 
+
 async function speakText(text) {
   const speakableText = normaliseSpeechText(text);
   if (!speakableText || !window.speechSynthesis) return false;
+
   if (!speechEnabled) {
-    setVoiceStatus("Voice will start after you click Start DataMetricus Assistant.", "blocked");
+    setVoiceStatus("Voice is not enabled yet.", "blocked");
     return false;
   }
 
-  // Incrementing the token cancels any earlier queued or active utterances.
-  const token = ++speechToken;
-  const runSpeech = async () => {
-    try {
-      clearError();
-      await waitForVoices();
-      preferredVoice = chooseSpeechVoice();
+  clearError();
+  await waitForVoices();
+  preferredVoice = chooseSpeechVoice();
+
+  return new Promise((resolve) => {
+    const utterance = new SpeechSynthesisUtterance(speakableText);
+    if (preferredVoice) utterance.voice = preferredVoice;
+    utterance.lang = preferredVoice?.lang || "en-US";
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    utterance.onstart = () => {
+      console.log("speech started");
       setVoiceStatus("Speaking reply...", "speaking");
+    };
 
-      // Chunk long replies so Chrome is less likely to cut speech off mid-response.
-      const chunks = splitIntoSpeechChunks(speakableText);
-      if (!chunks.length) return false;
-
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.resume();
-
-      for (const chunk of chunks) {
-        if (token !== speechToken) return false;
-
-        await new Promise((resolve, reject) => {
-          const utterance = new SpeechSynthesisUtterance(chunk);
-          if (preferredVoice) utterance.voice = preferredVoice;
-          utterance.lang = preferredVoice?.lang || "en-US";
-          utterance.rate = 1;
-          utterance.pitch = 1;
-          utterance.volume = 1;
-          utterance.onend = () => resolve();
-          utterance.onerror = (event) => reject(event.error || new Error("Speech playback failed."));
-          window.speechSynthesis.speak(utterance);
-        });
-      }
-
+    utterance.onend = () => {
+      console.log("speech ended");
       setVoiceStatus("Voice playback complete.", "");
       setStatus("idle", "Ready");
-      return true;
-    } catch (_error) {
-      showError("Browser speech could not play that reply. Close and reopen the assistant, then click Start again.");
-      setVoiceStatus("Browser speech was blocked. Reopen the assistant and click Start again.", "blocked");
-      setStatus("error", "Speech blocked");
-      return false;
-    }
-  };
+      resolve(true);
+    };
 
-  speechQueue = speechQueue.catch(() => {}).then(runSpeech);
-  return speechQueue;
+    utterance.onerror = (event) => {
+      console.log("speech error code:", event.error);
+      console.log("speech error event:", event);
+      setVoiceStatus(`Speech playback failed: ${event.error}`, "error");
+      resolve(false);
+    };
+
+    console.log("about to speak", {
+      text: speakableText,
+      voice: preferredVoice ? preferredVoice.name : null,
+      lang: utterance.lang,
+      embedMode: EMBED_MODE,
+      speechEnabled
+    });
+
+    window.setTimeout(() => {
+      window.speechSynthesis.speak(utterance);
+    }, 120);
+  });
 }
 
 async function speakAssistantText(text) {
   if (!text || !window.speechSynthesis) return false;
-
-  if (EMBED_MODE && window.parent && window.parent !== window) {
-    const speechId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    pendingParentSpeechId = speechId;
-    setVoiceStatus("Requesting homepage voice playback...", "speaking");
-    window.parent.postMessage({ type: "dm-speak-request", text, speechId }, window.location.origin);
-    return true;
-  }
-
   return speakText(text);
 }
 
-async function maybeSpeakWelcomeGreeting() {
-  if (ASSISTANT_MODE === "local") return;
-  if (hasGreetedThisSession()) return;
-  const unlocked = await unlockSpeech();
-  if (!unlocked) return;
-  // Persist the greeting flag for the current browser session only.
-  markGreetingDone();
-  await speakText(VOICE_WELCOME_GREETING);
+function showVoiceConsent(message = "") {
+  if (message) {
+    setVoiceStatus(message, "blocked");
+    return;
+  }
+
+  setVoiceStatus("Click Start DataMetricus Assistant to enable voice.", "blocked");
 }
 
 function registerGreetingUnlockHandlers() {
-  const tryGreeting = () => {
-    void maybeSpeakWelcomeGreeting();
+  const unlockOnly = async () => {
+    if (ASSISTANT_MODE === "local") return;
+    await unlockSpeech();
   };
 
-  // First pointer or keyboard interaction unlocks voice without forcing an immediate modal.
-  window.addEventListener("pointerdown", tryGreeting, { once: true });
-  window.addEventListener("keydown", tryGreeting, { once: true });
+  window.addEventListener("pointerdown", unlockOnly, { once: true });
+  window.addEventListener("keydown", unlockOnly, { once: true });
 
-  if (!hasGreetedThisSession()) {
-    showVoiceConsent();
-  }
+  showVoiceConsent();
 }
 
 function replayAssistantSpeech() {
@@ -615,16 +547,12 @@ function stopSession() {
 }
 
 async function startAssistant() {
-  clearError();
-  stopAssistantSpeech();
-
-  if (sessionStarted) {
-    btnStart.disabled = true;
-    btnStop.disabled = false;
-    setStatus("idle", ASSISTANT_MODE === "local" ? "Local chat ready" : "Ready for text");
-    chatInput.focus();
+  if (sessionStarted || startInProgress) {
     return;
   }
+
+  startInProgress = true;
+  clearError();
 
   setStatus("connecting", ASSISTANT_MODE === "local" ? "Connecting to local model..." : "Starting...");
 
@@ -642,7 +570,7 @@ async function startAssistant() {
       localSessionId = data.session_id || "";
       appendTurn("agent", data.message || INITIAL_GREETING);
     } else {
-      void maybeSpeakWelcomeGreeting();
+      await unlockSpeech();
       appendAgentTurnProgressive(INITIAL_GREETING, {
         speak: true,
         delayMs: 180,
@@ -666,6 +594,8 @@ async function startAssistant() {
         ? `${error.message} Make sure the backend is running on ${BACKEND_ORIGIN} and Ollama is installed with the configured model.`
         : error.message,
     );
+  } finally {
+    startInProgress = false;
   }
 }
 
@@ -714,17 +644,16 @@ if (btnSend) btnSend.addEventListener("click", sendMessage);
 if (btnReplay) btnReplay.addEventListener("click", replayAssistantSpeech);
 if (btnEnableVoice) {
   btnEnableVoice.addEventListener("click", () => {
-    if (ASSISTANT_MODE === "local") {
-      void unlockSpeech().then((enabled) => {
-        if (enabled && lastAssistantReply) {
-          void speakAssistantText(lastAssistantReply);
+    void unlockSpeech().then((enabled) => {
+      if (!enabled) return;
+      if (lastAssistantReply) {
+        void speakAssistantText(lastAssistantReply);
+        } else {
+          void speakAssistantText(INITIAL_GREETING);
         }
       });
-      return;
-    }
-    void maybeSpeakWelcomeGreeting();
-  });
-}
+    });
+  }
 
 if (chatInput) {
   chatInput.addEventListener("keydown", (event) => {
@@ -758,28 +687,6 @@ window.addEventListener("message", (event) => {
   if (event.data?.type === "dm-start-assistant") {
     startAssistant();
     return;
-  }
-
-  if (event.data?.type === "dm-speak-status" && event.data?.speechId === pendingParentSpeechId) {
-    pendingParentSpeechId = null;
-    if (event.data.status === "started") {
-      setVoiceStatus("Homepage voice is speaking...", "speaking");
-      return;
-    }
-
-    if (event.data.status === "done") {
-      setVoiceStatus("Homepage voice playback complete.", "");
-      return;
-    }
-
-    if (event.data.status === "blocked") {
-      setVoiceStatus("Homepage voice was blocked. Close and reopen the assistant, then click Start again.", "blocked");
-      return;
-    }
-
-    if (event.data.status === "error") {
-      setVoiceStatus("Homepage voice playback failed. Close and reopen the assistant, then click Start again.", "error");
-    }
   }
 });
 
