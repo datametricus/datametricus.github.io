@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DataMetricus Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="header-inner">
+      <span class="logo-text">DataMetricus</span>
+      <span class="header-role">AI Coordinator</span>
+    </div>
+  </header>
+
+  <!-- ── Main panel ─────────────────────────────────────────────────────── -->
+  <main class="panel">
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span class="status-dot" id="statusDot"></span>
+      <span class="status-label" id="statusLabel">Ready</span>
+    </div>
+
+    <p class="backend-note">
+      Assistant: <span id="backendUrlValue"></span>
+    </p>
+
+    <p class="backend-note" id="modeNote">
+      Mode: Typed chat with spoken replies
+    </p>
+
+    <p class="backend-note">
+      Click <strong>Start DataMetricus Assistant</strong> to open the conversation, then type your message below.
+    </p>
+
+    <p class="voice-status" id="voiceStatus" aria-live="polite" hidden></p>
+
+    <!-- Transcript area -->
+    <section class="transcript-section">
+      <div class="transcript-header">Conversation</div>
+      <div class="transcript-body" id="transcriptBody">
+        <p class="transcript-placeholder">Your conversation will appear here.</p>
+      </div>
+    </section>
+
+    <!-- Lead summary panel (shown once fields start populating) -->
+    <section class="lead-panel" id="leadPanel" aria-live="polite" hidden>
+      <div class="lead-panel-header">Captured Information</div>
+      <dl class="lead-grid" id="leadGrid"></dl>
+      <div class="missing-notice" id="missingNotice" hidden></div>
+    </section>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button class="btn btn-primary" id="btnStart" type="button">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8"  y1="23" x2="16" y2="23"/>
+        </svg>
+        Start DataMetricus Assistant
+      </button>
+
+      <button class="btn btn-danger" id="btnStop" type="button" disabled>
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+        </svg>
+        End Session
+      </button>
+
+      <button class="btn" id="btnReplay" type="button" disabled>
+        Replay Voice
+      </button>
+    </div>
+
+    <div class="composer" id="composer" hidden>
+      <label class="composer-label" for="chatInput">Your message</label>
+      <textarea class="composer-input" id="chatInput" rows="4" placeholder="Type your message..."></textarea>
+      <div class="composer-actions">
+        <button class="btn btn-primary" id="btnSend" type="button">Send Message</button>
+      </div>
+    </div>
+
+    <!-- Error notice -->
+    <div class="error-notice" id="errorNotice" hidden role="alert"></div>
+
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <p>DataMetricus · Quantitative Advisory &amp; Training · Confidential</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

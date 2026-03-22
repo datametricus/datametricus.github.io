@@ -257,73 +257,30 @@ gtag('config', 'G-XGF1P33KPV', { 'anonymize_ip': true});
       <a href="mailto:info@datametricus.com">info@datametricus.com</a>
     </div>
   </div>
+  
 </footer>
 
-<div class="ai-fab" id="ai-button" onclick="startConversation()">
-  🎤 Ask DataMetricus AI
+<div class="ai-fab" id="ai-button" onclick="openVoiceAssistant()">
+  Ask DataMetricus AI
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/retell-client-js-sdk/dist/bundle.js"></script>
-
 <script>
-  // We declare the variable but don't initialize it yet
-  let retellWebClient;
+  function buildVoiceAssistantUrl(options = {}) {
+    const voiceUrl = new URL('/ai-agent/frontend/index.html', window.location.origin);
+    voiceUrl.searchParams.set('mode', 'browser');
+    if (options.embed) voiceUrl.searchParams.set('embed', '1');
+    if (options.autostart) voiceUrl.searchParams.set('autostart', '1');
+    return voiceUrl.toString();
+  }
 
-  // This function runs once the page and all scripts are fully loaded
-  window.onload = function() {
-    try {
-      // Check if the library loaded correctly
-      if (typeof RetellWebClient !== 'undefined') {
-        retellWebClient = new RetellWebClient.RetellWebClient();
-        console.log("Retell SDK initialized successfully.");
-      } else {
-        console.error("Retell SDK failed to load from CDN.");
+  function openVoiceAssistant() {
+    if (window.location.pathname.endsWith('/index.html') || window.location.pathname === '/' || window.location.pathname === '/index') {
+      if (typeof toggleHomepageAssistant === 'function') {
+        toggleHomepageAssistant(true);
+        return;
       }
-    } catch (e) {
-      console.error("Error initializing Retell:", e);
     }
-  };
-
-  async function startConversation() {
-    // Safety check: Don't run if the client isn't ready
-    if (!retellWebClient) {
-      alert("AI Assistant is under development. Please try again later.");
-      return;
-    }
-
-    const btn = document.getElementById('ai-button');
-    
-    try {
-      btn.innerText = "⌛ Connecting...";
-      
-      // Point to your Aruba PHP bridge
-      const response = await fetch('/api/create-call.php', { method: 'POST' });
-      const data = await response.json();
-      
-      if (!data.access_token) {
-        throw new Error("No access token received from server.");
-      }
-
-      retellWebClient.startCall({
-        accessToken: data.access_token,
-      });
-      
-    } catch (err) {
-      console.error("AI Connection Error:", err);
-      btn.innerText = "⚠️ Connection Failed";
-      setTimeout(() => { btn.innerText = "🎤 Ask DataMetricus AI"; }, 3000);
-    }
-    
-    // Event Listeners for UI updates
-    retellWebClient.on('call_started', () => {
-      btn.innerText = "🔴 Live: Speaking...";
-      btn.style.background = "#ff0000";
-    });
-    
-    retellWebClient.on('call_ended', () => {
-      btn.innerText = "🎤 Ask DataMetricus AI";
-      btn.style.background = "#000";
-    });
+    window.open(buildVoiceAssistantUrl(), '_blank', 'noopener');
   }
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
