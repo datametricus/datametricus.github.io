@@ -907,6 +907,16 @@ if (speechLanguage) {
     }
     if (btnStart && !sessionStarted) btnStart.disabled = false;
     clearError();
+    // Update voice immediately in case user has already unlocked speech, otherwise on next unlock or assistant start.
+    try {
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.resume();
+      const u = new SpeechSynthesisUtterance(" ");
+      u.volume = 0.01;
+      u.lang = selectedSpeechLocale();
+      window.speechSynthesis.speak(u);
+    } catch (_) {}
+    
     preferredVoice = chooseSpeechVoice(selectedSpeechLanguage);
     if (selectedSpeechLanguage === "it" && !preferredVoice) {
       setVoiceStatus("Italian selected. No Italian voice found in this browser yet.", "blocked");
