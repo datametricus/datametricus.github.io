@@ -52,7 +52,12 @@ gtag('config', 'G-XGF1P33KPV', { 'anonymize_ip': true});
 <nav class="dm-nav">
   <div class="dm-nav__inner">
     <a class="dm-nav__brand" href="./index.html">Data<span>Metricus</span></a>
-    <ul class="dm-nav__links">
+    <button class="dm-nav__toggle" id="dmNavToggle" type="button" aria-expanded="false" aria-controls="dmNavLinks" aria-label="Open navigation menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <ul class="dm-nav__links" id="dmNavLinks">
       <li><a href="./index.html">Home</a></li>
       <li><a href="./services.html">Services</a></li>
       <li><a href="./training.html">Training</a></li>
@@ -61,6 +66,32 @@ gtag('config', 'G-XGF1P33KPV', { 'anonymize_ip': true});
     </ul>
   </div>
 </nav>
+<script>
+  (function () {
+    var nav = document.querySelector('.dm-nav');
+    var toggle = document.getElementById('dmNavToggle');
+    var links = document.getElementById('dmNavLinks');
+    if (!nav || !toggle || !links) return;
+
+    function setOpen(open) {
+      nav.classList.toggle('dm-nav--open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+    }
+
+    toggle.addEventListener('click', function () {
+      setOpen(!nav.classList.contains('dm-nav--open'));
+    });
+
+    links.addEventListener('click', function (event) {
+      if (event.target && event.target.tagName === 'A') setOpen(false);
+    });
+
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 768) setOpen(false);
+    });
+  })();
+</script>
 
 
 

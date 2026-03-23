@@ -164,6 +164,24 @@ function toggleHomepageAssistant(open) {
   var frame = document.getElementById('homepageAssistantFrame');
   if (!shell || !frame) return;
 
+  function notifyAssistantStart(targetFrame) {
+    if (!targetFrame || !targetFrame.contentWindow) return;
+    var attempts = 0;
+    var maxAttempts = 5;
+    var timer = window.setInterval(function () {
+      attempts += 1;
+      if (!targetFrame.contentWindow) {
+        window.clearInterval(timer);
+        return;
+      }
+      targetFrame.contentWindow.postMessage(
+        { type: 'dm-start-assistant' },
+        window.location.origin
+      );
+      if (attempts >= maxAttempts) window.clearInterval(timer);
+    }, 220);
+  }
+
   if (open) {
     unlockHomepageSpeech();
     dmHomepageVoice = pickHomepageVoice();
@@ -172,18 +190,10 @@ function toggleHomepageAssistant(open) {
     if (!frame.src) {
       frame.src = buildVoiceAssistantUrl({ embed: true, autostart: true });
       frame.onload = function () {
-        if (frame.contentWindow) {
-          frame.contentWindow.postMessage(
-            { type: 'dm-start-assistant' },
-            window.location.origin
-          );
-        }
+        notifyAssistantStart(frame);
       };
     } else if (frame.contentWindow) {
-      frame.contentWindow.postMessage(
-        { type: 'dm-start-assistant' },
-        window.location.origin
-      );
+      notifyAssistantStart(frame);
     }
   } else {
     window.speechSynthesis && window.speechSynthesis.cancel();
