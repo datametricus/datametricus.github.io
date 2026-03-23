@@ -13,7 +13,7 @@ const ASSISTANT_MODE = queryParam("mode")    || "local";
 const BACKEND_ORIGIN = (queryParam("backend") || "http://localhost:8000").replace(/\/+$/, "");
 const BACKEND_TOKEN  = queryParam("token")   || "";
 const ASSISTANT_TEXT_DELAY_MS = 120;
-const ASSISTANT_TEXT_STEP_MS  = 120;
+const ASSISTANT_TEXT_STEP_MS  = 24;
 
 const btnStart       = document.getElementById("btnStart");
 const btnStop        = document.getElementById("btnStop");
@@ -286,8 +286,15 @@ function appendAgentTurnProgressive(text, actions = [], options = {}) {
 
   // Use speech boundary events for tighter text/voice sync; fallback to timer typing if unavailable.
   let sawBoundary = false;
+  let sawSpeechStart = false;
+  const speechGuardId = window.setTimeout(() => {
+    if (!typingDone && !sawBoundary && !sawSpeechStart) startFallbackTyping();
+  }, delayMs + 700);
   void speakText(text, {
     startDelayMs: delayMs,
+    onStart: () => {
+      sawSpeechStart = true;
+    },
     onBoundary: (event) => {
       if (typingDone) return;
       if (typeof event?.charIndex !== "number") return;
@@ -296,12 +303,17 @@ function appendAgentTurnProgressive(text, actions = [], options = {}) {
       body.textContent = text.slice(0, index);
       transcriptBody.scrollTop = transcriptBody.scrollHeight;
     },
-    onEnd: finishTyping,
+    onEnd: () => {
+      window.clearTimeout(speechGuardId);
+      finishTyping();
+    },
     onError: () => {
+      window.clearTimeout(speechGuardId);
       if (!sawBoundary) startFallbackTyping();
       else finishTyping();
     },
   }).then((spoken) => {
+    window.clearTimeout(speechGuardId);
     if (!spoken) startFallbackTyping();
   });
 }

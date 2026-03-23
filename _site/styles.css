@@ -89,6 +89,28 @@ main.content {
   color: var(--dm-teal);
 }
 
+.dm-nav__toggle {
+  display: none;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.dm-nav__toggle span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: rgba(255,255,255,0.92);
+  border-radius: 999px;
+}
+
 .dm-nav__links {
   display: flex;
   gap: 32px;
@@ -1024,8 +1046,38 @@ details[open] summary.dm-syllabus__toggle::after {
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
+  .dm-nav__inner {
+    height: 64px;
+    position: relative;
+  }
+
+  .dm-nav__toggle {
+    display: inline-flex;
+  }
+
   .dm-nav__links {
     display: none;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: var(--dm-navy);
+    border-top: 1px solid rgba(255,255,255,0.12);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    padding: 10px 24px 14px;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 120;
+  }
+
+  .dm-nav--open .dm-nav__links {
+    display: flex;
+  }
+
+  .dm-nav__links a {
+    display: block;
+    padding: 10px 0;
+    font-size: 0.95rem;
   }
 
   .dm-hero {
