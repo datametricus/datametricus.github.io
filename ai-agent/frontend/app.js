@@ -1,6 +1,7 @@
 "use strict";
 
-const INITIAL_GREETING = "Hello, welcome to DataMetricus. I'm the AI assistant. Are you looking for advisory support or training?";
+const INITIAL_GREETING_EN = "Hello, welcome to DataMetricus. I'm the AI assistant. Are you looking for advisory support or training?";
+const INITIAL_GREETING_IT = "Ciao, benvenuto in DataMetricus. Sono l'assistente AI. Cerchi supporto di advisory o formazione?";
 
 function queryParam(name) {
   return new URLSearchParams(window.location.search).get(name) || "";
@@ -11,6 +12,8 @@ const AUTOSTART     = queryParam("autostart") === "1";
 const ASSISTANT_MODE = queryParam("mode")    || "local";
 const BACKEND_ORIGIN = (queryParam("backend") || "http://localhost:8000").replace(/\/+$/, "");
 const BACKEND_TOKEN  = queryParam("token")   || "";
+const ASSISTANT_TEXT_DELAY_MS = 120;
+const ASSISTANT_TEXT_STEP_MS  = 120;
 
 const btnStart       = document.getElementById("btnStart");
 const btnStop        = document.getElementById("btnStop");
@@ -29,6 +32,7 @@ const errorNotice    = document.getElementById("errorNotice");
 const backendUrlValue = document.getElementById("backendUrlValue");
 const modeNote       = document.getElementById("modeNote");
 const voiceStatus    = document.getElementById("voiceStatus");
+const speechLanguage = document.getElementById("speechLanguage");
 
 // ── Lead data ────────────────────────────────────────────────────────────────
 const LEAD_FIELDS = [
@@ -61,6 +65,25 @@ let startInProgress = false;
 let localSessionId  = "";
 let lastAssistantReply = "";
 let speechEnabled   = false;
+const querySpeechLang = queryParam("speech_lang");
+let selectedSpeechLanguage = (querySpeechLang === "it" || querySpeechLang === "en") ? querySpeechLang : "";
+
+function isItalianMode() {
+  return selectedSpeechLanguage === "it";
+}
+
+function hasSpeechLanguageSelection() {
+  return selectedSpeechLanguage === "en" || selectedSpeechLanguage === "it";
+}
+
+function initialGreeting() {
+  return isItalianMode() ? INITIAL_GREETING_IT : INITIAL_GREETING_EN;
+}
+
+function localModeUserMessage(message) {
+  if (!isItalianMode()) return message;
+  return `Rispondi in italiano. Mantieni un tono professionale, chiaro e conciso. Messaggio utente: ${message}`;
+}
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 if (EMBED_MODE) document.body.classList.add("embed-mode");
@@ -74,6 +97,8 @@ if (modeNote) {
     ? "Mode: Local typed chat with browser-spoken replies"
     : "Mode: Typed chat with spoken replies";
 }
+if (speechLanguage) speechLanguage.value = selectedSpeechLanguage;
+if (btnStart && !hasSpeechLanguageSelection()) btnStart.disabled = true;
 if (composer) composer.hidden = false;
 
 // ── Status / error helpers ────────────────────────────────────────────────────
@@ -177,7 +202,11 @@ function appendTurn(role, text, actions = []) {
 }
 
 function appendAgentTurnProgressive(text, actions = [], options = {}) {
-  const { speak = true, delayMs = 120, stepMs = 14 } = options;
+  const {
+    speak = true,
+    delayMs = ASSISTANT_TEXT_DELAY_MS,
+    stepMs = ASSISTANT_TEXT_STEP_MS,
+  } = options;
   clearPlaceholder();
 
   const wrapper = document.createElement("div");
@@ -216,24 +245,65 @@ function appendAgentTurnProgressive(text, actions = [], options = {}) {
 
   lastAssistantReply = text;
   if (btnReplay) btnReplay.disabled = false;
-  if (speak) void speakAssistantText(text);
+  let typingDone = false;
+  let fallbackStarted = false;
 
-  const chars = Array.from(text);
-  let index = 0;
-
-  const tick = () => {
-    if (index >= chars.length) {
-      body.classList.remove("streaming");
-      if (actionsEl) actionsEl.hidden = false;
-      return;
-    }
-    body.textContent += chars[index];
-    index++;
+  const finishTyping = () => {
+    if (typingDone) return;
+    typingDone = true;
+    body.textContent = text;
+    body.classList.remove("streaming");
+    if (actionsEl) actionsEl.hidden = false;
     transcriptBody.scrollTop = transcriptBody.scrollHeight;
-    window.setTimeout(tick, stepMs);
   };
 
-  window.setTimeout(tick, delayMs);
+  const startFallbackTyping = () => {
+    if (typingDone || fallbackStarted) return;
+    fallbackStarted = true;
+
+    const chars = Array.from(text);
+    let index = 0;
+
+    const tick = () => {
+      if (typingDone) return;
+      if (index >= chars.length) {
+        finishTyping();
+        return;
+      }
+      body.textContent += chars[index];
+      index++;
+      transcriptBody.scrollTop = transcriptBody.scrollHeight;
+      window.setTimeout(tick, stepMs);
+    };
+
+    window.setTimeout(tick, delayMs);
+  };
+
+  if (!speak) {
+    startFallbackTyping();
+    return;
+  }
+
+  // Use speech boundary events for tighter text/voice sync; fallback to timer typing if unavailable.
+  let sawBoundary = false;
+  void speakText(text, {
+    startDelayMs: delayMs,
+    onBoundary: (event) => {
+      if (typingDone) return;
+      if (typeof event?.charIndex !== "number") return;
+      sawBoundary = true;
+      const index = Math.max(0, Math.min(text.length, event.charIndex));
+      body.textContent = text.slice(0, index);
+      transcriptBody.scrollTop = transcriptBody.scrollHeight;
+    },
+    onEnd: finishTyping,
+    onError: () => {
+      if (!sawBoundary) startFallbackTyping();
+      else finishTyping();
+    },
+  }).then((spoken) => {
+    if (!spoken) startFallbackTyping();
+  });
 }
 
 // ── Speech ────────────────────────────────────────────────────────────────────
@@ -267,13 +337,36 @@ function waitForVoices(timeoutMs = 2000) {
   });
 }
 
-function chooseSpeechVoice() {
+function selectedSpeechLocale() {
+  return selectedSpeechLanguage === "it" ? "it-IT" : "en-US";
+}
+
+function chooseSpeechVoice(language = selectedSpeechLanguage) {
   const voices = window.speechSynthesis?.getVoices?.() || [];
   if (!voices.length) return null;
+
+  const langRegex = language === "it"
+    ? /^it(-|_)?(IT)?/i
+    : /^en(-|_)?(US|GB)?/i;
+
+  const preferredNames = language === "it"
+    ? ["Alice", "Federica", "Luca", "Paola"]
+    : ["Samantha", "Daniel", "Karen", "Alex"];
+
+  const preferredByName = preferredNames
+    .map((name) => voices.find((voice) => voice.name === name))
+    .find(Boolean);
+
+  const languageMatch = voices.find((voice) => langRegex.test(voice.lang));
+  if (language === "it") {
+    // In Italian mode, avoid silently falling back to English voices.
+    return preferredByName || languageMatch || null;
+  }
+
   return (
-    voices.find(v => v.name === "Samantha") ||
-    voices.find(v => v.name === "Daniel")   ||
-    voices.find(v => /^en(-|_)?(US|GB)?/i.test(v.lang)) ||
+    preferredByName ||
+    languageMatch ||
+    voices.find((voice) => /^en(-|_)?(US|GB)?/i.test(voice.lang)) ||
     voices[0] || null
   );
 }
@@ -291,12 +384,19 @@ async function unlockSpeech() {
   speechEnabled = true;
   requestParentSpeechUnlock();
   await waitForVoices();
-  preferredVoice = chooseSpeechVoice();
+  preferredVoice = chooseSpeechVoice(selectedSpeechLanguage);
   setVoiceStatus(EMBED_MODE ? "Embedded voice is ready." : "Voice is ready.", "");
   return true;
 }
 
-async function speakText(text) {
+async function speakText(text, options = {}) {
+  const {
+    startDelayMs = 120,
+    onStart = null,
+    onBoundary = null,
+    onEnd = null,
+    onError = null,
+  } = options;
   const speakableText = normaliseSpeechText(text);
   if (!speakableText || !window.speechSynthesis) return false;
   if (!speechEnabled) {
@@ -305,21 +405,36 @@ async function speakText(text) {
   }
   clearError();
   await waitForVoices();
-  preferredVoice = chooseSpeechVoice();
+  preferredVoice = chooseSpeechVoice(selectedSpeechLanguage);
 
   return new Promise((resolve) => {
     const utterance = new SpeechSynthesisUtterance(speakableText);
     if (preferredVoice) utterance.voice = preferredVoice;
-    utterance.lang   = preferredVoice?.lang || "en-US";
+    utterance.lang   = selectedSpeechLocale();
     utterance.rate   = 1;
     utterance.pitch  = 1;
     utterance.volume = 1;
 
-    utterance.onstart = () => setVoiceStatus("Speaking reply...", "speaking");
-    utterance.onend   = () => { setVoiceStatus("", ""); setStatus("idle", "Ready"); resolve(true); };
-    utterance.onerror = (e) => { setVoiceStatus(`Speech failed: ${e.error}`, "error"); resolve(false); };
+    utterance.onstart = (event) => {
+      setVoiceStatus("Speaking reply...", "speaking");
+      if (typeof onStart === "function") onStart(event);
+    };
+    utterance.onboundary = (event) => {
+      if (typeof onBoundary === "function") onBoundary(event);
+    };
+    utterance.onend = (event) => {
+      setVoiceStatus("", "");
+      setStatus("idle", "Ready");
+      if (typeof onEnd === "function") onEnd(event);
+      resolve(true);
+    };
+    utterance.onerror = (event) => {
+      setVoiceStatus(`Speech failed: ${event.error}`, "error");
+      if (typeof onError === "function") onError(event);
+      resolve(false);
+    };
 
-    window.setTimeout(() => window.speechSynthesis.speak(utterance), 120);
+    window.setTimeout(() => window.speechSynthesis.speak(utterance), startDelayMs);
   });
 }
 
@@ -330,7 +445,9 @@ async function speakAssistantText(text) {
 
 function showVoiceConsent(message = "") {
   setVoiceStatus(
-    message || "Click Start DataMetricus Assistant to enable voice.",
+    message || (hasSpeechLanguageSelection()
+      ? "Click Start DataMetricus Assistant to enable voice."
+      : "Select EN or IT first, then click Start DataMetricus Assistant."),
     "blocked"
   );
 }
@@ -348,7 +465,10 @@ function registerGreetingUnlockHandlers() {
 function replayAssistantSpeech() {
   clearError();
   void unlockSpeech();
-  if (!lastAssistantReply) { showError("There is no assistant reply to replay yet."); return; }
+  if (!lastAssistantReply) {
+    showError(isItalianMode() ? "Non c'è ancora una risposta dell'assistente da riprodurre." : "There is no assistant reply to replay yet.");
+    return;
+  }
   void speakAssistantText(lastAssistantReply);
 }
 
@@ -356,7 +476,7 @@ function replayAssistantSpeech() {
 /**
  * Returns { reply: string, actions: [{label, href}] }
  */
-function buildAssistantReply(text) {
+function buildAssistantReplyEn(text) {
   const lower = text.toLowerCase();
 
   const isTraining  = /\btraining|course|workshop|learn|programme|upskill\b/i.test(lower);
@@ -484,6 +604,132 @@ function buildAssistantReply(text) {
   };
 }
 
+function buildAssistantReplyIt(text) {
+  const lower = text.toLowerCase();
+
+  const isTraining  = /\btraining|formazione|corso|corsi|workshop|impar|programma|upskill\b/i.test(lower);
+  const isAdvisory  = /\badvisory|consul|progetto|analisi|modello|audit|pipeline|ricerca|assicur|sanit|attuar|regolat\b/i.test(lower);
+  const wantsContact = /\bcontatt|email|chiam|parl|ricontatt|get in touch|s[iì]\b|^certo$|^ok$|^okay$|^va bene$/i.test(lower);
+  const wantsMore   = /\bpi[uù]|domand|spiega|cosa|come|altro|altra|no\b|^non ancora$/i.test(lower);
+
+  if (convState === "ask_service") {
+    if (/\bciao|salve|buongiorno|buonasera|hello|hi|hey\b/i.test(lower)) {
+      return { reply: "Ciao! Cerchi supporto di advisory o formazione?", actions: [] };
+    }
+    if (isTraining) {
+      lead.inquiry_type = "training";
+      convState = "ask_detail";
+      return {
+        reply: "Offriamo tre percorsi formativi strutturati: Fondamenti, Modellazione Applicata e Workflow Riproducibili. Quale percorso ti interessa di più?",
+        actions: [{ label: "Vedi tutti i programmi formativi →", href: "/training.html" }],
+      };
+    }
+    if (isAdvisory) {
+      lead.inquiry_type = "advisory";
+      convState = "ask_detail";
+      return {
+        reply: "Copriamo modellistica attuariale, metriche sanitarie, ricerca riproducibile e analytics regolamentare. Su quale area sei focalizzato?",
+        actions: [{ label: "Vedi i nostri servizi →", href: "/services.html" }],
+      };
+    }
+    return {
+      reply: "Posso aiutarti con servizi di advisory o programmi di formazione. Quale ti interessa?",
+      actions: [],
+    };
+  }
+
+  if (convState === "ask_detail") {
+    convState = "offer_contact";
+
+    if (lead.inquiry_type === "training") {
+      let track = "";
+      let detail = "";
+      if (/fondament|foundation/i.test(lower)) {
+        track  = "Foundations";
+        detail = "Il percorso Fondamenti copre metodi quantitativi di base e principi di riproducibilità.";
+      } else if (/applied|modelling|modeling|modellazione/i.test(lower)) {
+        track  = "Applied Modelling";
+        detail = "Il percorso Modellazione Applicata copre costruzione pratica di modelli statistici e attuariali.";
+      } else if (/reproducible|riproduc|quarto|workflow/i.test(lower)) {
+        track  = "Reproducible Workflows";
+        detail = "Il percorso Workflow Riproducibili copre Quarto, controllo versione e pipeline verificabili.";
+      }
+      if (track) lead.training_track = track;
+
+      return {
+        reply: `${detail || "La nostra formazione è pensata per analisti che vogliono lavorare con maggiore rigore metodologico."} Vuoi che il nostro team ti contatti con maggiori dettagli?`,
+        actions: [{ label: "Vedi il curriculum completo →", href: "/training.html" }],
+      };
+    }
+
+    if (lead.inquiry_type === "advisory") {
+      if (/insurance|assicur|attuar/i.test(lower))                lead.domain = "Assicurazioni vita e salute";
+      else if (/public health|epidemiol|health metric|sanit/i.test(lower)) lead.domain = "Sanità pubblica";
+      else if (/regolat|governance|risk|rischio/i.test(lower))    lead.domain = "Regolamentazione e rischio";
+      else if (/research|academic|ricerca|accademic/i.test(lower)) lead.domain = "Ricerca";
+
+      const area = lead.domain ? lead.domain.toLowerCase() : "la tua area";
+      return {
+        reply: `Saremo felici di supportarti su ${area}. Il nostro lavoro è completamente documentato e verificabile in modo indipendente. Vuoi che il nostro team ti contatti?`,
+        actions: [{ label: "Vedi i nostri servizi →", href: "/services.html" }],
+      };
+    }
+
+    return {
+      reply: "Vuoi che il nostro team specialistico ti contatti?",
+      actions: [],
+    };
+  }
+
+  if (convState === "offer_contact") {
+    if (wantsContact && !wantsMore) {
+      convState = "done";
+      return {
+        reply: "Perfetto. Usa il nostro modulo contatti per inviare la richiesta: il team risponde entro un giorno lavorativo. Quando vuoi, clicca Dismiss per chiudere l'assistente. Se vuoi riprendere la chat, aggiorna la pagina.",
+        actions: [{ label: "Vai al modulo contatti →", href: "/contact.html" }],
+      };
+    }
+    if (/price|pricing|cost|fee|charge|budget|quote|prezzo|costo|preventivo/i.test(lower)) {
+      return {
+        reply: "Il prezzo dipende da ambito e livello di complessità tecnica. Possiamo preparare un preventivo su misura. Vuoi che il nostro team ti contatti?",
+        actions: [],
+      };
+    }
+    if (/where|location|based|office|remote|dove|sede|remoto/i.test(lower)) {
+      return {
+        reply: "DataMetricus opera come advisory indipendente, con clienti sia da remoto sia on-site. Vuoi che il nostro team ti ricontatti?",
+        actions: [],
+      };
+    }
+    if (/how long|timeline|duration|time|weeks|months|temp|durata|settimane|mesi/i.test(lower)) {
+      return {
+        reply: "Le tempistiche variano in base allo scope. I progetti più piccoli durano in genere da due a quattro settimane; quelli più ampi vengono pianificati su misura. Vuoi confrontarti sul tuo caso specifico?",
+        actions: [],
+      };
+    }
+    if (/no|not now|later|maybe|another time|non ora|pi[uù] tardi|magari/i.test(lower)) {
+      convState = "done";
+      return {
+        reply: "Nessun problema. Puoi sempre contattarci dalla pagina contatti. Clicca Dismiss per chiudere l'assistente, oppure aggiorna la pagina per iniziare una nuova conversazione.",
+        actions: [{ label: "Contattaci →", href: "/contact.html" }],
+      };
+    }
+    return {
+      reply: "Posso aiutarti soprattutto su servizi e formazione. Per richieste più specifiche, il nostro team può supportarti direttamente. Vuoi essere ricontattato?",
+      actions: [{ label: "Vai al modulo contatti →", href: "/contact.html" }],
+    };
+  }
+
+  return {
+    reply: "Spero sia stato utile. Clicca Dismiss per chiudere l'assistente, oppure aggiorna la pagina per iniziare una nuova conversazione.",
+    actions: [],
+  };
+}
+
+function buildAssistantReply(text) {
+  return isItalianMode() ? buildAssistantReplyIt(text) : buildAssistantReplyEn(text);
+}
+
 // ── Lead panel ────────────────────────────────────────────────────────────────
 function updateLeadPanel() {
   const populated = LEAD_FIELDS.filter(([key]) => lead[key]);
@@ -517,7 +763,7 @@ function handleUserMessage(text) {
   setStatus("connecting", "Thinking...");
   window.setTimeout(() => {
     const { reply, actions } = buildAssistantReply(message);
-    appendTurn("agent", reply, actions);
+    appendAgentTurnProgressive(reply, actions);
     updateLeadPanel();
     setStatus("idle", "Ready");
   }, 300);
@@ -536,6 +782,10 @@ function stopSession() {
 
 async function startAssistant() {
   if (sessionStarted || startInProgress) return;
+  if (!hasSpeechLanguageSelection()) {
+    setVoiceStatus("Please choose a language first.", "blocked");
+    return;
+  }
   startInProgress = true;
   clearError();
   setStatus("connecting", ASSISTANT_MODE === "local" ? "Connecting to local model..." : "Starting...");
@@ -546,12 +796,12 @@ async function startAssistant() {
     if (ASSISTANT_MODE === "local") {
       if (!EMBED_MODE) await unlockSpeech();
       else { requestParentSpeechUnlock(); setVoiceStatus("Homepage voice is ready.", ""); }
-      const data = await postJson("/local/session", {});
+      const data = await postJson("/local/session", { language: selectedSpeechLanguage });
       localSessionId = data.session_id || "";
-      appendTurn("agent", data.message || INITIAL_GREETING);
+      appendAgentTurnProgressive(data.message || initialGreeting(), [], { delayMs: 180 });
     } else {
       await unlockSpeech();
-      appendAgentTurnProgressive(INITIAL_GREETING, [], { speak: true, delayMs: 180, stepMs: 14 });
+      appendAgentTurnProgressive(initialGreeting(), [], { speak: true, delayMs: 180 });
     }
 
     btnStart.disabled = true;
@@ -594,8 +844,14 @@ async function sendMessage() {
   setStatus("connecting", "Waiting for local reply...");
 
   try {
-    const data = await postJson("/local/chat", { session_id: localSessionId, message });
-    appendTurn("agent", data.reply || "I couldn't generate a reply just now.");
+    const data = await postJson("/local/chat", {
+      session_id: localSessionId,
+      message: localModeUserMessage(message),
+      language: selectedSpeechLanguage,
+    });
+    appendAgentTurnProgressive(
+      data.reply || (isItalianMode() ? "Non sono riuscito a generare una risposta in questo momento." : "I couldn't generate a reply just now."),
+    );
     setStatus("idle", "Local chat ready");
   } catch (error) {
     setVoiceStatus("No spoken reply because chat failed.", "error");
@@ -614,7 +870,7 @@ if (btnEnableVoice) {
   btnEnableVoice.addEventListener("click", () => {
     void unlockSpeech().then((enabled) => {
       if (!enabled) return;
-      void speakAssistantText(lastAssistantReply || INITIAL_GREETING);
+      void speakAssistantText(lastAssistantReply || initialGreeting());
     });
   });
 }
@@ -629,11 +885,31 @@ if (chatInput) {
   });
 }
 
+if (speechLanguage) {
+  speechLanguage.addEventListener("change", () => {
+    selectedSpeechLanguage = speechLanguage.value === "it" ? "it" : (speechLanguage.value === "en" ? "en" : "");
+    if (!hasSpeechLanguageSelection()) {
+      if (btnStart) btnStart.disabled = true;
+      setVoiceStatus("Please select EN or IT.", "blocked");
+      return;
+    }
+    if (btnStart && !sessionStarted) btnStart.disabled = false;
+    clearError();
+    preferredVoice = chooseSpeechVoice(selectedSpeechLanguage);
+    if (selectedSpeechLanguage === "it" && !preferredVoice) {
+      setVoiceStatus("Italian selected. No Italian voice found in this browser yet.", "blocked");
+    } else {
+      setVoiceStatus(selectedSpeechLanguage === "it" ? "Voice language set to Italiano." : "Voice language set to English.", "");
+    }
+    if (!sessionStarted && !startInProgress) void startAssistant();
+  });
+}
+
 if (window.speechSynthesis) {
   window.speechSynthesis.addEventListener("voiceschanged", () => {
-    preferredVoice = chooseSpeechVoice();
+    preferredVoice = chooseSpeechVoice(selectedSpeechLanguage);
   });
-  preferredVoice = chooseSpeechVoice();
+  preferredVoice = chooseSpeechVoice(selectedSpeechLanguage);
   registerGreetingUnlockHandlers();
 } else {
   if (btnReplay) btnReplay.disabled = true;
@@ -643,7 +919,9 @@ if (window.speechSynthesis) {
 
 if (AUTOSTART) {
   btnStop.hidden = EMBED_MODE;
-  window.addEventListener("load", () => startAssistant(), { once: true });
+  window.addEventListener("load", () => {
+    if (hasSpeechLanguageSelection()) startAssistant();
+  }, { once: true });
 }
 
 window.addEventListener("message", (event) => {

@@ -359,14 +359,26 @@ gtag('config', 'G-XGF1P33KPV', { 'anonymize_ip': true});
     return voiceUrl.toString();
   }
 
+  function isHomepagePath(pathname) {
+    return pathname === '/' || pathname === '/index' || pathname.endsWith('/index.html');
+  }
+
+  function homepageAssistantUrl() {
+    const target = new URL('/', window.location.origin);
+    target.searchParams.set('assistant', 'open');
+    return target.toString();
+  }
+
   function openVoiceAssistant() {
-    if (window.location.pathname.endsWith('/index.html') || window.location.pathname === '/' || window.location.pathname === '/index') {
+    if (isHomepagePath(window.location.pathname)) {
       if (typeof toggleHomepageAssistant === 'function') {
         toggleHomepageAssistant(true);
         return;
       }
+      window.location.assign(homepageAssistantUrl());
+      return;
     }
-    window.open(buildVoiceAssistantUrl(), '_blank', 'noopener');
+    window.location.assign(homepageAssistantUrl());
   }
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
