@@ -466,7 +466,6 @@ function showVoiceConsent(message = "") {
 
 function registerGreetingUnlockHandlers() {
   const unlockOnly = async () => {
-    if (ASSISTANT_MODE === "local") return;
     await unlockSpeech();
   };
   window.addEventListener("pointerdown", unlockOnly, { once: true });
@@ -806,8 +805,11 @@ async function startAssistant() {
     sessionStarted = true;
 
     if (ASSISTANT_MODE === "local") {
-      if (!EMBED_MODE) await unlockSpeech();
-      else { requestParentSpeechUnlock(); setVoiceStatus("Homepage voice is ready.", ""); }
+      await unlockSpeech();
+      if (EMBED_MODE) {
+        requestParentSpeechUnlock();
+        setVoiceStatus("Homepage voice is ready.", "");
+      }
       const data = await postJson("/local/session", { language: selectedSpeechLanguage });
       localSessionId = data.session_id || "";
       appendAgentTurnProgressive(data.message || initialGreeting(), [], { delayMs: 180 });
