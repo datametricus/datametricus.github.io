@@ -244,6 +244,20 @@ function toggleHomepageAssistant(open) {
   }
 }
 
+function shouldOpenAssistantFromQuery() {
+  var assistant = new URLSearchParams(window.location.search).get('assistant');
+  if (!assistant) return false;
+  return /^(open|1|true|yes)$/i.test(assistant);
+}
+
+function clearAssistantQueryParam() {
+  var url = new URL(window.location.href);
+  if (!url.searchParams.has('assistant')) return;
+  url.searchParams.delete('assistant');
+  var next = url.pathname + (url.search ? url.search : '') + (url.hash ? url.hash : '');
+  window.history.replaceState({}, '', next);
+}
+
 window.addEventListener('message', function (event) {
   if (event.origin !== window.location.origin) return;
   if (event.data && event.data.type === 'dm-speech-unlock') {
@@ -259,6 +273,10 @@ if (window.speechSynthesis) {
 
 window.addEventListener('load', function () {
   dmHomepageVoice = pickHomepageVoice();
+  if (shouldOpenAssistantFromQuery()) {
+    toggleHomepageAssistant(true);
+    clearAssistantQueryParam();
+  }
 });
 </script>
 
@@ -432,14 +450,26 @@ window.addEventListener('load', function () {
     return voiceUrl.toString();
   }
 
+  function isHomepagePath(pathname) {
+    return pathname === '/' || pathname === '/index' || pathname.endsWith('/index.html');
+  }
+
+  function homepageAssistantUrl() {
+    const target = new URL('/', window.location.origin);
+    target.searchParams.set('assistant', 'open');
+    return target.toString();
+  }
+
   function openVoiceAssistant() {
-    if (window.location.pathname.endsWith('/index.html') || window.location.pathname === '/' || window.location.pathname === '/index') {
+    if (isHomepagePath(window.location.pathname)) {
       if (typeof toggleHomepageAssistant === 'function') {
         toggleHomepageAssistant(true);
         return;
       }
+      window.location.assign(homepageAssistantUrl());
+      return;
     }
-    window.open(buildVoiceAssistantUrl(), '_blank', 'noopener');
+    window.location.assign(homepageAssistantUrl());
   }
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
