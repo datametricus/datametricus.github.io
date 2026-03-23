@@ -192,6 +192,20 @@ function toggleHomepageAssistant(open) {
   }
 }
 
+function shouldOpenAssistantFromQuery() {
+  var assistant = new URLSearchParams(window.location.search).get('assistant');
+  if (!assistant) return false;
+  return /^(open|1|true|yes)$/i.test(assistant);
+}
+
+function clearAssistantQueryParam() {
+  var url = new URL(window.location.href);
+  if (!url.searchParams.has('assistant')) return;
+  url.searchParams.delete('assistant');
+  var next = url.pathname + (url.search ? url.search : '') + (url.hash ? url.hash : '');
+  window.history.replaceState({}, '', next);
+}
+
 window.addEventListener('message', function (event) {
   if (event.origin !== window.location.origin) return;
   if (event.data && event.data.type === 'dm-speech-unlock') {
@@ -207,6 +221,10 @@ if (window.speechSynthesis) {
 
 window.addEventListener('load', function () {
   dmHomepageVoice = pickHomepageVoice();
+  if (shouldOpenAssistantFromQuery()) {
+    toggleHomepageAssistant(true);
+    clearAssistantQueryParam();
+  }
 });
 </script>
 
