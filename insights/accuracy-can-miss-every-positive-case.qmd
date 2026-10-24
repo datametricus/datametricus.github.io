@@ -1,0 +1,124 @@
+---
+title: "Why 95% Accuracy Can Miss Every Positive Case"
+description: "A practical explanation of why accuracy alone can hide model failure, and what to examine before relying on a classification result."
+author: "Federica Gazzelloni"
+date: "2026-10-24"
+categories: [Model validation, Classification, Decision metrics]
+title-block-style: none
+body-classes: "dm-custom-title-page"
+format:
+  html:
+    include-before-body: ../_nav.html
+    include-after-body: ../_footer.html
+---
+
+```{=html}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Why 95% Accuracy Can Miss Every Positive Case",
+  "description": "A practical explanation of why accuracy alone can hide model failure, and what to examine before relying on a classification result.",
+  "datePublished": "2026-10-24",
+  "dateModified": "2026-10-24",
+  "author": {
+    "@type": "Person",
+    "name": "Federica Gazzelloni"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "DataMetricus",
+    "url": "https://datametricus.com"
+  },
+  "mainEntityOfPage": "https://datametricus.com/insights/accuracy-can-miss-every-positive-case.html"
+}
+</script>
+
+<section class="dm-page-header dm-insight-hero">
+  <div class="dm-container">
+    <p class="dm-hero__eyebrow">Model validation</p>
+    <h1>Why 95% accuracy can miss every positive case</h1>
+    <p>A high score can still describe a model that fails on the cases that matter.</p>
+    <div class="dm-insight-meta">Federica Gazzelloni · 24 October 2026 · 4 min read</div>
+  </div>
+</section>
+```
+
+::: {.dm-insight-article}
+
+Accuracy is easy to understand. That is also why it can be easy to overuse.
+
+Suppose a dataset contains 10,000 cases. Five hundred are positive and 9,500 are negative. A model predicts every case as negative.
+
+Its accuracy is 95%.
+
+It has also missed every positive case.
+
+This is not a technical paradox. Accuracy counts the number of correct predictions and divides by the total number of cases. When one class dominates the data, a model can achieve a high score by following that imbalance rather than identifying the less common outcome.
+
+## Start with the decision, not the score
+
+A performance metric only becomes meaningful when it is connected to the decision the model supports.
+
+In a screening setting, a false negative may delay investigation or treatment. In fraud detection, it may allow a costly event to pass without review. In an insurance process, different errors may affect pricing, reserving, intervention, or customer outcomes in different ways.
+
+The useful question is therefore not simply, “How accurate is the model?” It is:
+
+> Which errors does the model make at the threshold where it will actually be used, and what are the consequences of those errors?
+
+## What to examine instead
+
+Accuracy can remain part of the assessment, but it needs context. A practical review should normally include:
+
+- **The class balance.** How common is the outcome of interest? A headline score has little meaning without this denominator.
+- **Sensitivity or recall.** Of the positive cases, how many did the model identify?
+- **Specificity.** Of the negative cases, how many did it correctly leave negative?
+- **Precision.** When the model predicts a positive case, how often is that prediction correct?
+- **The confusion matrix.** What are the actual numbers of true positives, true negatives, false positives, and false negatives?
+- **Calibration.** When the model assigns a probability, does that probability correspond to the observed frequency?
+- **Threshold behaviour.** How do the errors change when the decision threshold changes?
+
+These measures answer different questions. None is automatically the right one. The choice depends on the setting, the costs of different errors, and the people or processes affected by the result.
+
+## Compare the model with a useful baseline
+
+The all-negative example is also a reminder that every model needs a baseline.
+
+If a simple rule achieves 95% accuracy, a new model that reports 95% has not shown improvement. It may still be useful for another reason, but that claim needs evidence from the relevant performance measures.
+
+A baseline does not need to be sophisticated. It needs to make the comparison honest.
+
+## Validate the operating point
+
+Many model evaluations stop at an average measure across all possible thresholds. Operational decisions do not use all possible thresholds. They use one threshold, or a small set of rules, in a particular workflow.
+
+Validation should therefore examine the selected operating point. That includes:
+
+1. how the threshold was chosen;
+2. the number and type of errors it produces;
+3. whether performance is stable across relevant groups and time periods;
+4. whether the result remains acceptable when prevalence or data quality changes; and
+5. whether the monitoring plan will detect deterioration after deployment.
+
+This turns model assessment from a ranking exercise into a decision review.
+
+## A clear reporting standard
+
+A strong model report should make it possible for a reader to reconstruct the claim. At minimum, it should state the sample size, outcome prevalence, validation design, decision threshold, confusion matrix, selected metrics, and material limitations.
+
+“The model achieved 95% accuracy” is not enough.
+
+“At the selected threshold, the model identified 82% of positive cases, with a precision of 61%, on a held-out sample in which the outcome prevalence was 5%” is much more informative. It still requires context, but it tells the reader what the model actually did.
+
+The aim is not to replace one headline metric with another. It is to connect model performance to the decision that follows.
+
+```{=html}
+<div class="dm-insight-cta">
+  <h2>Reviewing a consequential model?</h2>
+  <p>DataMetricus provides independent review of statistical, actuarial, and epidemiological models, including threshold performance, assumptions, reproducibility, and documentation.</p>
+  <a class="dm-btn dm-btn--primary" href="/services/model-validation.html">Explore model validation</a>
+</div>
+```
+
+:::
+

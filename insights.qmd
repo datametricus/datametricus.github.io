@@ -1,0 +1,47 @@
+---
+title: "Insights"
+description: "Practical notes on model validation, actuarial analytics, health metrics, and reproducible quantitative work from DataMetricus."
+title-block-style: none
+body-classes: "dm-custom-title-page"
+listing:
+  contents: "insights/*.qmd"
+  sort: "date desc"
+  type: default
+  fields: [date, title, description, categories]
+  categories: true
+  feed:
+    title: "DataMetricus Insights"
+    description: "Practical notes on model validation, actuarial analytics, health metrics, and reproducible quantitative work."
+    language: en-GB
+    items: 20
+    type: partial
+format:
+  html:
+    include-before-body: _nav.html
+    include-after-body: _footer.html
+---
+
+```{=html}
+<section class="dm-page-header">
+  <div class="dm-container">
+    <p class="dm-hero__eyebrow">DataMetricus Insights</p>
+    <h1>Clear analysis for consequential decisions</h1>
+    <p>Practical notes on model validation, actuarial analytics, health metrics, and reproducible quantitative work.</p>
+    <div class="dm-mt-24">
+      <a class="dm-btn dm-btn--secondary" href="/insights.xml" type="application/rss+xml">Follow the RSS feed</a>
+    </div>
+  </div>
+</section>
+
+<section class="dm-section dm-section--white dm-insights-intro">
+  <div class="dm-container">
+    <div class="dm-section-header" style="max-width:760px;">
+      <h2>Methods, decisions, and evidence</h2>
+      <p>Each article starts with a practical analytical question and explains what to check, why it matters, and where the limits are. Industry Watch notes will add concise interpretation of material developments, with links to the original sources.</p>
+    </div>
+  </div>
+</section>
+
+<div id="listing"></div>
+```
+

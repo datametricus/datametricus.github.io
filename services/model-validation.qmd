@@ -1,6 +1,8 @@
 ---
-title: ""
-description: ""
+title: "Independent Model Validation"
+description: "Independent review of statistical, actuarial, and epidemiological models for regulated and oversight-driven environments."
+title-block-style: none
+body-classes: "dm-custom-title-page"
 format:
   html:
     include-before-body: ../_nav.html
@@ -16,12 +18,12 @@ format:
   "provider": {
     "@type": "ProfessionalService",
     "name": "DataMetricus",
-    "url": "https://datametricus.github.io",
-    "email": "docksbox@pm.me"
+    "url": "https://datametricus.com",
+    "email": "info@datametricus.com"
   },
   "serviceType": "Statistical and Actuarial Model Validation",
   "description": "Independent review of statistical and actuarial models for regulated and oversight-driven environments. Validation engagements cover model design, assumptions, implementation logic, and documentation sufficiency for audit or regulatory examination.",
-  "areaServed": "GB",
+  "areaServed": "Worldwide",
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
     "name": "Validation Engagement Formats",

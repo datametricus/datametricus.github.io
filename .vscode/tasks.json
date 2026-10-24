@@ -1,0 +1,23 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "n8n: summarize QMD/Rmd to socials",
+      "type": "shell",
+      "command": "jq -Rs --arg filename \"${fileBasename}\" --arg sourceUrl \"\" '{filename:$filename, content:., sourceUrl:$sourceUrl, allSocials:true, requiresApproval:true}' \"${file}\" | curl -sS -X POST \"${input:n8nWebhookUrl}\" -H 'Content-Type: application/json' --data-binary @-",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "n8nWebhookUrl",
+      "type": "promptString",
+      "description": "n8n webhook URL",
+      "default": "http://localhost:5678/webhook/vscode-qmd-social-summary"
+    }
+  ]
+}

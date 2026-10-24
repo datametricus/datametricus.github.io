@@ -1222,3 +1222,119 @@ details[open] summary.dm-syllabus__toggle::after {
   z-index: 1000;
   border: 1px solid #333;
 }
+
+/* ── Insights and articles ── */
+
+.dm-custom-title-page #title-block-header {
+  display: none;
+}
+
+.dm-insights-intro {
+  padding-bottom: 24px;
+}
+
+#listing-listing {
+  max-width: var(--dm-max-width);
+  margin: 0 auto;
+  padding: 24px 24px 80px;
+}
+
+.quarto-listing-default .quarto-post {
+  border-bottom: 1px solid var(--dm-border);
+  padding: 28px 0;
+}
+
+.quarto-listing-default .listing-title,
+.quarto-listing-default .listing-title a {
+  color: var(--dm-navy);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.quarto-listing-default .listing-description,
+.quarto-listing-default .listing-date,
+.quarto-listing-default .listing-category {
+  color: var(--dm-muted);
+}
+
+.quarto-listing-default .listing-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.quarto-listing-default .listing-category {
+  border: 1px solid var(--dm-border);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+}
+
+.listing-no-matching.d-none {
+  display: none;
+}
+
+.dm-insight-hero .dm-insight-meta {
+  color: rgba(255,255,255,0.62);
+  font-size: 0.875rem;
+  margin-top: 24px;
+}
+
+.dm-insight-article {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 72px 24px 16px;
+}
+
+.dm-insight-article p,
+.dm-insight-article li {
+  font-size: 1.0625rem;
+  line-height: 1.78;
+}
+
+.dm-insight-article h2 {
+  margin-top: 48px;
+  margin-bottom: 16px;
+}
+
+.dm-insight-article blockquote {
+  border-left: 3px solid var(--dm-teal);
+  color: var(--dm-navy);
+  font-size: 1.125rem;
+  margin: 32px 0;
+  padding: 8px 0 8px 24px;
+}
+
+.dm-insight-cta {
+  background: var(--dm-off-white);
+  border: 1px solid var(--dm-border);
+  border-left: 3px solid var(--dm-teal);
+  border-radius: 0 4px 4px 0;
+  margin-top: 56px;
+  padding: 32px;
+}
+
+.dm-insight-cta h2 {
+  margin-top: 0;
+}
+
+.dm-insight-cta p {
+  font-size: 0.975rem;
+}
+
+@media (max-width: 768px) {
+  .dm-insight-article {
+    padding-top: 48px;
+  }
+
+  .dm-insight-article p,
+  .dm-insight-article li {
+    font-size: 1rem;
+  }
+
+  .dm-insight-cta {
+    padding: 24px;
+  }
+}

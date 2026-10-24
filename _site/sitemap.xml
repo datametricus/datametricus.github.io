@@ -2,30 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://datametricus.com/services/model-validation.html</loc>
-    <lastmod>2026-03-01T22:41:03.631Z</lastmod>
+    <lastmod>2026-10-24T17:24:33.918Z</lastmod>
   </url>
   <url>
-    <loc>https://datametricus.com/careers.html</loc>
-    <lastmod>2026-03-01T23:04:59.826Z</lastmod>
-  </url>
-  <url>
-    <loc>https://datametricus.com/index.html</loc>
-    <lastmod>2026-03-23T15:51:50.822Z</lastmod>
-  </url>
-  <url>
-    <loc>https://datametricus.com/services.html</loc>
-    <lastmod>2026-03-01T22:24:39.719Z</lastmod>
-  </url>
-  <url>
-    <loc>https://datametricus.com/contact.html</loc>
-    <lastmod>2026-03-01T21:33:32.190Z</lastmod>
+    <loc>https://datametricus.com/training.html</loc>
+    <lastmod>2026-02-28T18:18:23.876Z</lastmod>
   </url>
   <url>
     <loc>https://datametricus.com/about.html</loc>
     <lastmod>2026-03-01T23:02:56.825Z</lastmod>
   </url>
   <url>
-    <loc>https://datametricus.com/training.html</loc>
-    <lastmod>2026-02-28T18:18:23.876Z</lastmod>
+    <loc>https://datametricus.com/contact.html</loc>
+    <lastmod>2026-10-24T17:22:39.281Z</lastmod>
+  </url>
+  <url>
+    <loc>https://datametricus.com/insights/accuracy-can-miss-every-positive-case.html</loc>
+    <lastmod>2026-10-24T17:29:57.834Z</lastmod>
+  </url>
+  <url>
+    <loc>https://datametricus.com/services.html</loc>
+    <lastmod>2026-03-01T22:24:39.719Z</lastmod>
+  </url>
+  <url>
+    <loc>https://datametricus.com/index.html</loc>
+    <lastmod>2026-03-23T15:51:50.822Z</lastmod>
+  </url>
+  <url>
+    <loc>https://datametricus.com/careers.html</loc>
+    <lastmod>2026-03-01T23:04:59.826Z</lastmod>
+  </url>
+  <url>
+    <loc>https://datametricus.com/insights.html</loc>
+    <lastmod>2026-10-24T17:25:57.373Z</lastmod>
   </url>
 </urlset>
